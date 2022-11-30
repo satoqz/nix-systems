@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+if [ ! -f "$1" ]; then
+  exit 1
+fi
+
+case "$1" in
+  *.png|*.jpg|*.jpeg|*.JPG|*.JPEG)
+    osascript -e "set the clipboard to (read (POSIX file \"$PWD/$1\") as JPEG picture)"
+    ;;
+  *)
+    pbcopy < "$1"
+    ;;
+esac
