@@ -1,0 +1,10 @@
+#!/bin/sh -e
+[ "$1" = "" ] && exit 1;
+url=$(curl -s -F"file=@$1" https://0x0.st)
+
+NC='\e[0m'
+GREEN='\e[32m'
+BLUE='\e[34m'
+echo "$url" | pbcopy
+echo -e "${GREEN}Uploaded!${NC}"
+echo -e "Copied url (${BLUE}${url}${NC}) to clipboard"
