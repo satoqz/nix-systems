@@ -11,13 +11,16 @@
     cargo
     cargo-watch
     clippy
+    taplo
 
     gopls
 
     nodejs
     nodePackages.yarn
-    nodePackages.typescript-language-server
     nodePackages.prettier
+    nodePackages.typescript-language-server
+    nodePackages.yaml-language-server
+    nodePackages.dockerfile-language-server-nodejs
 
     (python3.withPackages
       (ps: with ps; [
