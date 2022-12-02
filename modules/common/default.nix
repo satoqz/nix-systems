@@ -1,7 +1,9 @@
-{ pkgs, inputs, user, hostname, home, isDarwin, ... }:
+{ pkgs, lib, inputs, user, hostname, home, isDarwin, ... }:
 
 {
-  imports = if isDarwin then [ ./darwin.nix ] else [ ./linux.nix ];
+  imports =
+    (if isDarwin then [ ./darwin.nix ] else [ ./linux.nix ])
+    ++ lib.optional (home != [ ]) ./home-manager.nix;
 
   nix = {
     extraOptions = "experimental-features = nix-command flakes";
@@ -14,14 +16,4 @@
   networking.hostName = hostname;
 
   environment.pathsToLink = [ "/share/zsh" ];
-
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = { inherit inputs user hostname; };
-    users.${user} = {
-      home.stateVersion = "23.05";
-      imports = home;
-    };
-  };
 }

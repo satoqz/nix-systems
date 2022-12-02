@@ -22,7 +22,7 @@
   outputs = { self, nixpkgs, utils, darwin, home-manager, ... }@inputs:
     let
       user = "satoqz";
-      mkHost = { hostname, system, home ? [ ./home/shell.nix ] }:
+      mkHost = { hostname, system, home ? [ ] }:
         let
           isDarwin = nixpkgs.lib.hasSuffix "darwin" system;
         in
@@ -36,11 +36,8 @@
               self.${
               if isDarwin then "darwinModules" else "nixosModules"}.common
             )
-            (
-              home-manager.${
-              if isDarwin then "darwinModules" else "nixosModules"}.home-manager
-            )
-          ];
+          ] ++ nixpkgs.lib.optional (home != [ ])
+            home-manager.${if isDarwin then "darwinModules" else "nixosModules"}.home-manager;
         };
     in
     {
@@ -62,6 +59,10 @@
         tandoori = mkHost {
           hostname = "tandoori";
           system = "aarch64-linux";
+          home = [
+            ./home/shell.nix
+            ./home/tools.nix
+          ];
         };
       };
 

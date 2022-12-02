@@ -8,10 +8,6 @@
 
   networking.firewall.enable = false;
 
-  virtualisation.docker.enable = true;
-
-  users.users.${user}.extraGroups = [ "docker" ];
-
   services.openssh.enable = true;
 }
 
