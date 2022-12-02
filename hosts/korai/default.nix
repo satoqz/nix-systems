@@ -5,6 +5,8 @@
 
   nix.extraOptions = "build-users-group = nixbld";
 
+  programs.zsh.enable = true;
+
   fonts = {
     fontDir.enable = true;
     fonts = with pkgs; [
