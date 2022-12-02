@@ -8,6 +8,7 @@
     htop
     neofetch
     ripgrep
+    gitui
     jq
 
     common-utils
@@ -36,8 +37,6 @@
     userName = "satoqz";
     extraConfig.init.defaultBranch = "main";
   };
-
-  programs.gitui.enable = true;
 
   programs.gh = {
     enable = true;
