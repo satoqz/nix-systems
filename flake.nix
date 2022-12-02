@@ -22,13 +22,13 @@
   outputs = { self, nixpkgs, utils, darwin, home-manager, ... }@inputs:
     let
       user = "satoqz";
-      mkHost = { hostname, system, home ? [ ./home/shell ] }:
+      mkHost = { hostname, system, home ? [ ./home/shell.nix ] }:
         let
-          isDarwin = system == "aarch64-darwin" || system == "x86_64-darwin";
+          isDarwin = nixpkgs.lib.hasSuffix "darwin" system;
         in
         (if isDarwin then darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem) {
           inherit system;
-          specialArgs = { inherit self inputs user system hostname home; };
+          specialArgs = { inherit self inputs user system hostname home isDarwin; };
           modules = [
             ./hosts/${hostname}
             { nixpkgs.overlays = [ self.overlays.default ]; }
@@ -51,7 +51,7 @@
       });
 
       nixosModules = {
-        common = import ./modules/common.nix;
+        common = import ./modules/common;
       };
 
       darwinModules = {

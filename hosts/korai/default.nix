@@ -1,16 +1,10 @@
-{ pkgs, user, ... }:
+{ pkgs, ... }:
 
 {
-  services.nix-daemon.enable = true;
-
-  nix.extraOptions = "build-users-group = nixbld";
-
-  programs.zsh.enable = true;
-
   fonts = {
     fontDir.enable = true;
-    fonts = with pkgs; [
-      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    fonts = [
+      (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     ];
   };
 
@@ -35,6 +29,4 @@
   };
 
   environment.extraInit = "eval $(/opt/homebrew/bin/brew shellenv)";
-
-  system.stateVersion = 4;
 }

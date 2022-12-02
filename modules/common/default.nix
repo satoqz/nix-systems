@@ -1,6 +1,8 @@
-{ pkgs, inputs, user, hostname, home, ... }:
+{ pkgs, inputs, user, hostname, home, isDarwin, ... }:
 
 {
+  imports = if isDarwin then [ ./darwin.nix ] else [ ./linux.nix ];
+
   nix = {
     extraOptions = "experimental-features = nix-command flakes";
   };
