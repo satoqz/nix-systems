@@ -32,14 +32,11 @@
 
     clang-tools
   ] ++ lib.optionals pkgs.stdenv.isLinux [
-    gcc
+    # darwin has apple clang
+    clang
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
-    (docker-client.override {
-      withBtrfs = false;
-      withLvm = false;
-      withSeccomp = false;
-      withSystemd = false;
-    })
+    # on linux use the docker daemon
+    docker-client
     docker-compose
     colima
   ];
