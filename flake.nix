@@ -2,45 +2,101 @@
   description = "satoqz's nix environment";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+    unstable.url = "nixpkgs/nixpkgs-unstable";
+
+    nix-darwin-unstable = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "unstable";
+    };
+
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "unstable";
+    };
+
+    nixos-stable.url = "nixpkgs/nixos-22.11";
+
+    home-manager-nixos-stable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixos-stable";
+    };
 
     utils.url = "github:numtide/flake-utils";
-
-    darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     helix.url = "github:helix-editor/helix";
   };
 
-  outputs = { self, nixpkgs, utils, darwin, home-manager, ... }@inputs:
+  outputs =
+    { self
+    , unstable
+    , nix-darwin-unstable
+    , home-manager-unstable
+    , nixos-stable
+    , home-manager-nixos-stable
+    , utils
+    , ...
+    }@inputs:
     let
-      user = "satoqz";
-      mkHost = { hostname, system, home ? [ ] }:
-        let
-          isDarwin = nixpkgs.lib.hasSuffix "darwin" system;
-          modules = if isDarwin then "darwinModules" else "nixosModules";
-        in
-        (if isDarwin then darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem) {
+      defaultUser = "satoqz";
+
+      mkHost =
+        { system
+        , hostname
+        , user
+        , nixpkgs
+        , hmModule
+        , home
+        , darwin ? null
+        }: {
           inherit system;
-          specialArgs = {
-            pkgs = import nixpkgs {
-              overlays = [ self.overlays.default ];
-              inherit system;
+          specialArgs =
+            let
+              isDarwin = darwin != null;
+            in
+            {
+              pkgs = import nixpkgs {
+                overlays = [ self.overlays.default ];
+                inherit system;
+              };
+              inputs = inputs
+                // { inherit nixpkgs; }
+                // nixpkgs.lib.optionalAttrs isDarwin { inherit darwin; };
+              inherit system hostname user home isDarwin;
             };
-            inherit self inputs user system hostname home isDarwin;
-          };
           modules = [
             ./hosts/${hostname}
-            self.${modules}.common
-          ] ++ nixpkgs.lib.optional (home != [ ]) home-manager.${modules}.home-manager;
+            ./modules/common
+          ] ++ nixpkgs.lib.optional (home != [ ]) hmModule;
         };
+
+      mkNixosHost =
+        { arch
+        , hostname
+        , user ? defaultUser
+        , nixpkgs ? nixos-stable
+        , home-manager ? home-manager-nixos-stable
+        , home ? [ ]
+        }:
+        nixpkgs.lib.nixosSystem (mkHost {
+          system = "${arch}-linux";
+          hmModule = home-manager.darwinModules.home-manager;
+          inherit hostname user nixpkgs home;
+        });
+
+      mkDarwinHost =
+        { arch
+        , hostname
+        , user ? defaultUser
+        , nixpkgs ? unstable
+        , darwin ? nix-darwin-unstable
+        , home-manager ? home-manager-unstable
+        , home ? [ ]
+        }:
+        darwin.lib.darwinSystem (mkHost {
+          system = "${arch}-darwin";
+          hmModule = home-manager.darwinModules.home-manager;
+          inherit hostname user nixpkgs darwin home;
+        });
     in
     {
       overlays.default = (final: prev: with prev.pkgs; {
@@ -49,27 +105,19 @@
         common-utils = callPackage ./pkgs/common-utils { };
       });
 
-      nixosModules = {
-        common = import ./modules/common;
-      };
-
-      darwinModules = {
-        common = self.nixosModules.common;
-      };
-
       nixosConfigurations = {
-        tandoori = mkHost {
+        tandoori = mkNixosHost {
           hostname = "tandoori";
-          system = "aarch64-linux";
+          arch = "aarch64";
           home = [
             ./home/shell.nix
             ./home/tools.nix
           ];
         };
 
-        dopiaza = mkHost {
+        dopiaza = mkNixosHost {
           hostname = "dopiaza";
-          system = "x86_64-linux";
+          arch = "x86_64";
           home = [
             ./home/shell.nix
             ./home/tools.nix
@@ -79,9 +127,9 @@
       };
 
       darwinConfigurations = {
-        korai = mkHost {
+        korai = mkDarwinHost {
           hostname = "korai";
-          system = "aarch64-darwin";
+          arch = "aarch64";
           home = [
             ./home/shell.nix
             ./home/tools.nix
@@ -90,17 +138,16 @@
           ];
         };
       };
-    } // utils.lib.eachDefaultSystem (system:
-      let pkgs = import nixpkgs { inherit system; };
-      in
-      {
-        devShell = pkgs.mkShell {
-          packages = with pkgs; [
-            gnumake
-            rnix-lsp
-            nixpkgs-fmt
-          ];
-        };
-      }
-    );
+    }
+    // utils.lib.eachDefaultSystem (system:
+    let pkgs = import unstable { inherit system; }; in
+    {
+      devShell = pkgs.mkShell {
+        packages = with pkgs; [
+          gnumake
+          rnix-lsp
+          nixpkgs-fmt
+        ];
+      };
+    });
 }
