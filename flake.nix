@@ -25,19 +25,21 @@
       mkHost = { hostname, system, home ? [ ] }:
         let
           isDarwin = nixpkgs.lib.hasSuffix "darwin" system;
+          modules = if isDarwin then "darwinModules" else "nixosModules";
         in
         (if isDarwin then darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem) {
           inherit system;
-          specialArgs = { inherit self inputs user system hostname home isDarwin; };
+          specialArgs = {
+            pkgs = import nixpkgs {
+              overlays = [ self.overlays.default ];
+              inherit system;
+            };
+            inherit self inputs user system hostname home isDarwin;
+          };
           modules = [
             ./hosts/${hostname}
-            { nixpkgs.overlays = [ self.overlays.default ]; }
-            (
-              self.${
-              if isDarwin then "darwinModules" else "nixosModules"}.common
-            )
-          ] ++ nixpkgs.lib.optional (home != [ ])
-            home-manager.${if isDarwin then "darwinModules" else "nixosModules"}.home-manager;
+            self.${modules}.common
+          ] ++ nixpkgs.lib.optional (home != [ ]) home-manager.${modules}.home-manager;
         };
     in
     {
@@ -64,7 +66,7 @@
             ./home/tools.nix
           ];
         };
-        
+
         dopiaza = mkHost {
           hostname = "dopiaza";
           system = "x86_64-linux";
