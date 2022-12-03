@@ -64,6 +64,16 @@
             ./home/tools.nix
           ];
         };
+        
+        dopiaza = mkHost {
+          hostname = "dopiaza";
+          system = "x86_64-linux";
+          home = [
+            ./home/shell.nix
+            ./home/tools.nix
+            ./home/helix.nix
+          ];
+        };
       };
 
       darwinConfigurations = {
