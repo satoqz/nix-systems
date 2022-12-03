@@ -10,7 +10,7 @@
     enable = true;
     passwordAuthentication = false;
     permitRootLogin = "no";
-  }
+  };
 
   virtualisation.docker.enable = true;
  
