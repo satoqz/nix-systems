@@ -57,9 +57,10 @@ in
             (name: { inherit name; parser = "typescript"; })
             [ "typescript" "javascript" "tsx" "jsx" ]))
       ++
-      builtins.map withPrettier
-        (builtins.map (name: { inherit name; parser = name; })
-          [ "json" "markdown" "html" "css" "yaml" ])
+      builtins.map withAutoformat
+        (builtins.map withPrettier
+          (builtins.map (name: { inherit name; parser = name; })
+            [ "json" "markdown" "html" "css" "yaml" ]))
       ++
       builtins.map withAutoformat [
         { name = "rust"; }
