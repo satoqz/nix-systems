@@ -6,7 +6,11 @@
     ./networking.nix
   ];
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    permitRootLogin = "no";
+  };
 
   virtualisation.docker.enable = true;
  
