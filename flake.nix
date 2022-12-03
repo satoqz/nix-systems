@@ -79,7 +79,7 @@
         }:
         nixpkgs.lib.nixosSystem (mkHost {
           system = "${arch}-linux";
-          hmModule = home-manager.darwinModules.home-manager;
+          hmModule = home-manager.nixosModules.home-manager;
           inherit hostname user nixpkgs home;
         });
 
