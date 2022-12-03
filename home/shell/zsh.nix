@@ -42,29 +42,4 @@
       nix_shell = { format = "[*]($style) "; };
     };
   };
-
-  programs.tmux = {
-    enable = true;
-    keyMode = "vi";
-    baseIndex = 1;
-    escapeTime = 0;
-    historyLimit = 100000;
-    disableConfirmationPrompt = true;
-    terminal = "xterm-256color";
-    extraConfig = ''
-      set -sa terminal-overrides ",xterm-256color:RGB"
-    
-      set -g mouse on
-
-      set -g status-style default
-      set -g status-position bottom
-      
-      set -g status-left ""
-      set -g status-right ""
-
-      setw -g window-status-current-format " #I #[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' ) "
-      setw -g window-status-format " #I #( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )"
-    '';
-  };
-
 }

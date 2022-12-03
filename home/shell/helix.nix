@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, ... }:
+{ pkgs, lib, inputs, helixSource, ... }:
 
 let
   namesWithValue = { value, names }:
@@ -9,21 +9,21 @@ in
   programs.helix = {
     enable = true;
 
-    package = inputs.helix.packages.${pkgs.system}.default;
+    package = lib.mkIf helixSource inputs.helix.packages.${pkgs.system}.default;
 
     settings = {
-      theme = "gruvbox_patched";
+      theme = if helixSource then "gruvbox_patched" else "gruvbox";
       editor = {
         true-color = true;
         cursorline = true;
         color-modes = true;
-        bufferline = "multiple";
+        bufferline = lib.mkIf helixSource "multiple";
         cursor-shape.insert = "bar";
         indent-guides.render = true;
       };
     };
 
-    themes.gruvbox_patched = {
+    themes.gruvbox_patched = lib.mkIf helixSource {
       inherits = "gruvbox";
       "ui.bufferline.background".bg = "background";
       "ui.statusline".bg = "background";

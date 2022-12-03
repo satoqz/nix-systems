@@ -45,7 +45,6 @@
         , user
         , nixpkgs
         , hmModule
-        , home
         , darwin ? null
         }: {
           inherit system;
@@ -61,12 +60,13 @@
               inputs = inputs
                 // { inherit nixpkgs; }
                 // nixpkgs.lib.optionalAttrs isDarwin { inherit darwin; };
-              inherit system hostname user home isDarwin;
+              inherit self system hostname user isDarwin;
             };
           modules = [
             ./hosts/${hostname}
             ./modules/common
-          ] ++ nixpkgs.lib.optional (home != [ ]) hmModule;
+            hmModule
+          ];
         };
 
       mkNixosHost =
@@ -75,12 +75,10 @@
         , user ? defaultUser
         , nixpkgs ? nixos-stable
         , home-manager ? home-manager-nixos-stable
-        , home ? [ ]
-        }:
-        nixpkgs.lib.nixosSystem (mkHost {
+        }: nixpkgs.lib.nixosSystem (mkHost {
           system = "${arch}-linux";
           hmModule = home-manager.nixosModules.home-manager;
-          inherit hostname user nixpkgs home;
+          inherit hostname user nixpkgs;
         });
 
       mkDarwinHost =
@@ -90,12 +88,10 @@
         , nixpkgs ? unstable
         , darwin ? nix-darwin-unstable
         , home-manager ? home-manager-unstable
-        , home ? [ ]
-        }:
-        darwin.lib.darwinSystem (mkHost {
+        }: darwin.lib.darwinSystem (mkHost {
           system = "${arch}-darwin";
           hmModule = home-manager.darwinModules.home-manager;
-          inherit hostname user nixpkgs darwin home;
+          inherit hostname user nixpkgs darwin;
         });
     in
     {
@@ -109,20 +105,11 @@
         tandoori = mkNixosHost {
           hostname = "tandoori";
           arch = "aarch64";
-          home = [
-            ./home/shell.nix
-            ./home/tools.nix
-          ];
         };
 
         dopiaza = mkNixosHost {
           hostname = "dopiaza";
           arch = "x86_64";
-          home = [
-            ./home/shell.nix
-            ./home/tools.nix
-            ./home/helix.nix
-          ];
         };
       };
 
@@ -130,12 +117,6 @@
         korai = mkDarwinHost {
           hostname = "korai";
           arch = "aarch64";
-          home = [
-            ./home/shell.nix
-            ./home/tools.nix
-            ./home/helix.nix
-            ./home/development.nix
-          ];
         };
       };
     }

@@ -1,4 +1,4 @@
-{ user, ... }:
+{ lib, self, user, ... }:
 
 {
   imports = [
@@ -23,4 +23,14 @@
   };
 
   networking.domain = "trench.world";
+
+  system.autoUpgrade = {
+    enable = true;
+    flake = self.outPath;
+    flags = [
+      "--recreate-lock-file"
+      "--no-write-lock-file"
+      "-L"
+    ];
+  };
 }

@@ -29,4 +29,6 @@
   };
 
   environment.extraInit = "eval $(/opt/homebrew/bin/brew shellenv)";
+
+  helixSource = true;
 }

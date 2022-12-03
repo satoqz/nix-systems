@@ -1,19 +1,37 @@
-{ pkgs, lib, inputs, user, hostname, home, isDarwin, ... }:
+{ pkgs, lib, config, inputs, user, hostname, isDarwin, ... }:
 
 {
-  imports =
-    (if isDarwin then [ ./darwin.nix ] else [ ./linux.nix ])
-    ++ lib.optional (home != [ ]) ./home-manager.nix;
+  imports = if isDarwin then [ ./darwin.nix ] else [ ./linux.nix ];
 
-  nix = {
-    extraOptions = "experimental-features = nix-command flakes";
+  options.helixSource = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
   };
 
-  nixpkgs.config.allowUnfree = true;
+  config = {
+    nix = {
+      extraOptions = "experimental-features = nix-command flakes";
+    };
 
-  users.users.${user}.shell = pkgs.zsh;
+    nixpkgs.config.allowUnfree = true;
 
-  networking.hostName = hostname;
+    users.users.${user}.shell = pkgs.zsh;
 
-  environment.pathsToLink = [ "/share/zsh" ];
+    networking.hostName = hostname;
+
+    environment.pathsToLink = [ "/share/zsh" ];
+
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = {
+        helixSource = config.helixSource;
+        inherit inputs user hostname;
+      };
+      users.${user} = {
+        home.stateVersion = "22.11";
+        imports = [ ../../home/shell ];
+      };
+    };
+  };
 }
