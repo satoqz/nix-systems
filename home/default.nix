@@ -1,7 +1,8 @@
 {
   imports = [
     ./zsh.nix
-    ./tools.nix
     ./helix.nix
+    ./tools.nix
+    ./devtools.nix
   ];
 }

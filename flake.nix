@@ -44,29 +44,21 @@
         , hostname
         , user
         , nixpkgs
-        , hmModule
+        , modules
         , darwin ? null
         }: {
           inherit system;
           specialArgs =
-            let
-              isDarwin = darwin != null;
-            in
             {
               pkgs = import nixpkgs {
                 overlays = [ self.overlays.default ];
                 inherit system;
               };
-              inputs = inputs
-                // { inherit nixpkgs; }
-                // nixpkgs.lib.optionalAttrs isDarwin { inherit darwin; };
-              inherit self system hostname user isDarwin;
+              inputs = inputs // { inherit nixpkgs darwin; };
+              inherit self system hostname user;
             };
-          modules = [
-            ./hosts/${hostname}
-            ./modules/common
-            hmModule
-          ];
+          modules = let configPath = ./hosts/${hostname}/configuration.nix; in
+            (nixpkgs.lib.optional (builtins.pathExists configPath) configPath) ++ modules;
         };
 
       mkNixosHost =
@@ -75,9 +67,13 @@
         , user ? defaultUser
         , nixpkgs ? nixos-stable
         , home-manager ? home-manager-nixos-stable
+        , modules ? [ ]
         }: nixpkgs.lib.nixosSystem (mkHost {
           system = "${arch}-linux";
-          hmModule = home-manager.nixosModules.home-manager;
+          modules = [
+            home-manager.nixosModules.home-manager
+            self.nixosModules.default
+          ] ++ modules;
           inherit hostname user nixpkgs;
         });
 
@@ -88,9 +84,13 @@
         , nixpkgs ? unstable
         , darwin ? nix-darwin-unstable
         , home-manager ? home-manager-unstable
+        , modules ? [ ]
         }: darwin.lib.darwinSystem (mkHost {
           system = "${arch}-darwin";
-          hmModule = home-manager.darwinModules.home-manager;
+          modules = [
+            home-manager.darwinModules.home-manager
+            self.darwinModules.default
+          ] ++ modules;
           inherit hostname user nixpkgs darwin;
         });
     in
@@ -100,6 +100,10 @@
         darwin-utils = callPackage ./pkgs/darwin-utils { };
         common-utils = callPackage ./pkgs/common-utils { };
       });
+
+      nixosModules.default = import ./module/nixos.nix;
+
+      darwinModules.default = import ./module/darwin.nix;
 
       nixosConfigurations = {
         tandoori = mkNixosHost {
