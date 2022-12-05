@@ -26,80 +26,87 @@
     helix.url = "github:helix-editor/helix";
   };
 
-  outputs =
-    { self
-    , unstable
-    , nix-darwin-unstable
-    , home-manager-unstable
-    , nixos-stable
-    , home-manager-nixos-stable
-    , utils
-    , ...
-    }@inputs:
-    let
-      defaultUser = "satoqz";
+  outputs = {
+    self,
+    unstable,
+    nix-darwin-unstable,
+    home-manager-unstable,
+    nixos-stable,
+    home-manager-nixos-stable,
+    utils,
+    ...
+  } @ inputs: let
+    defaultUser = "satoqz";
 
-      mkHost =
-        { system
-        , hostname
-        , user
-        , nixpkgs
-        , modules
-        , darwin ? null
-        }: {
+    mkHost = {
+      system,
+      hostname,
+      user,
+      nixpkgs,
+      modules,
+      darwin ? null,
+    }: {
+      inherit system;
+      specialArgs = {
+        pkgs = import nixpkgs {
+          overlays = [self.overlays.default];
           inherit system;
-          specialArgs =
-            {
-              pkgs = import nixpkgs {
-                overlays = [ self.overlays.default ];
-                inherit system;
-              };
-              inputs = inputs // { inherit nixpkgs darwin; };
-              inherit self system hostname user;
-            };
-          modules = let configPath = ./hosts/${hostname}/configuration.nix; in
-            (nixpkgs.lib.optional (builtins.pathExists configPath) configPath) ++ modules;
         };
+        inputs = inputs // {inherit nixpkgs darwin;};
+        inherit self system hostname user;
+      };
+      modules = let
+        configPath = ./hosts/${hostname}/configuration.nix;
+      in
+        (nixpkgs.lib.optional (builtins.pathExists configPath) configPath) ++ modules;
+    };
 
-      mkNixosHost =
-        { arch
-        , hostname
-        , user ? defaultUser
-        , nixpkgs ? nixos-stable
-        , home-manager ? home-manager-nixos-stable
-        , modules ? [ ]
-        }: nixpkgs.lib.nixosSystem (mkHost {
-          system = "${arch}-linux";
-          modules = [
+    mkNixosHost = {
+      arch,
+      hostname,
+      user ? defaultUser,
+      nixpkgs ? nixos-stable,
+      home-manager ? home-manager-nixos-stable,
+      modules ? [],
+    }:
+      nixpkgs.lib.nixosSystem (mkHost {
+        system = "${arch}-linux";
+        modules =
+          [
             home-manager.nixosModules.home-manager
             self.nixosModules.default
-          ] ++ modules;
-          inherit hostname user nixpkgs;
-        });
+          ]
+          ++ modules;
+        inherit hostname user nixpkgs;
+      });
 
-      mkDarwinHost =
-        { arch
-        , hostname
-        , user ? defaultUser
-        , nixpkgs ? unstable
-        , darwin ? nix-darwin-unstable
-        , home-manager ? home-manager-unstable
-        , modules ? [ ]
-        }: darwin.lib.darwinSystem (mkHost {
-          system = "${arch}-darwin";
-          modules = [
+    mkDarwinHost = {
+      arch,
+      hostname,
+      user ? defaultUser,
+      nixpkgs ? unstable,
+      darwin ? nix-darwin-unstable,
+      home-manager ? home-manager-unstable,
+      modules ? [],
+    }:
+      darwin.lib.darwinSystem (mkHost {
+        system = "${arch}-darwin";
+        modules =
+          [
             home-manager.darwinModules.home-manager
             self.darwinModules.default
-          ] ++ modules;
-          inherit hostname user nixpkgs darwin;
-        });
-    in
-    {
-      overlays.default = (final: prev: with prev.pkgs; {
-        hash = callPackage ./pkgs/hash { };
-        darwin-utils = callPackage ./pkgs/darwin-utils { };
-        common-utils = callPackage ./pkgs/common-utils { };
+          ]
+          ++ modules;
+        inherit hostname user nixpkgs darwin;
       });
+  in
+    {
+      overlays.default = final: prev:
+        with prev.pkgs; {
+          hash = callPackage ./pkgs/hash {};
+          darwin-utils = callPackage ./pkgs/darwin-utils {};
+          common-utils = callPackage ./pkgs/common-utils {};
+        };
 
       nixosModules.default = import ./module/nixos.nix;
 
@@ -124,9 +131,9 @@
         };
       };
     }
-    // utils.lib.eachDefaultSystem (system:
-    let pkgs = import unstable { inherit system; }; in
-    {
+    // utils.lib.eachDefaultSystem (system: let
+      pkgs = import unstable {inherit system;};
+    in {
       devShell = pkgs.mkShell {
         packages = with pkgs; [
           gnumake

@@ -1,5 +1,4 @@
-{ stdenvNoCC }:
-
+{stdenvNoCC}:
 stdenvNoCC.mkDerivation rec {
   pname = "common-utils";
   version = "main";

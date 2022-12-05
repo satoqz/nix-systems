@@ -1,21 +1,25 @@
-{ pkgs, lib, ... }:
-
 {
-  home.packages = with pkgs; [
-    coreutils
-    curl
-    wget
-    htop
-    neofetch
-    ripgrep
-    gitui
-    jq
+  pkgs,
+  lib,
+  ...
+}: {
+  home.packages = with pkgs;
+    [
+      coreutils
+      curl
+      wget
+      htop
+      neofetch
+      ripgrep
+      gitui
+      jq
 
-    common-utils
-  ] ++ lib.optionals pkgs.stdenv.isDarwin [
-    darwin-utils
-    hash
-  ];
+      common-utils
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      darwin-utils
+      hash
+    ];
 
   programs.zsh.shellAliases = {
     "top" = "htop";
@@ -63,12 +67,12 @@
     terminal = "xterm-256color";
     extraConfig = ''
       set -sa terminal-overrides ",xterm-256color:RGB"
-    
+
       set -g mouse on
 
       set -g status-style default
       set -g status-position bottom
-      
+
       set -g status-left ""
       set -g status-right ""
 

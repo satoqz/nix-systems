@@ -37,9 +37,9 @@
         style = "white";
         format = "[$hostname]($style)";
       };
-      directory = { format = "[$path]($style) "; };
-      git_branch = { format = "[$branch(:$remote_branch)]($style) "; };
-      nix_shell = { format = "[*]($style) "; };
+      directory = {format = "[$path]($style) ";};
+      git_branch = {format = "[$branch(:$remote_branch)]($style) ";};
+      nix_shell = {format = "[*]($style) ";};
     };
   };
 }
