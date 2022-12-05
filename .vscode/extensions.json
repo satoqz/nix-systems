@@ -2,6 +2,6 @@
   "recommendations": [
     "jnoortheen.nix-ide",
     "kamadorueda.alejandra",
-    "rubymaniac.vscode-direnv"
+    "mkhl.direnv"
   ]
 }
