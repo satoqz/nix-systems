@@ -9,6 +9,7 @@ with lib; {
     nix = mkEnableOption "Nix tooling";
     rust = mkEnableOption "Rust tooling";
     node = mkEnableOption "Node.js tooling";
+    deno = mkEnableOption "Deno tooling";
     docker = mkEnableOption "Docker tooling";
     python = mkEnableOption "Python tooling";
     go = mkEnableOption "Golang tooling";
@@ -40,6 +41,9 @@ with lib; {
         nodePackages.yarn
         nodePackages.typescript-language-server
         nodePackages.prettier
+      ]
+      ++ optionals devtools.deno [
+        deno
       ]
       ++ optionals devtools.docker [
         nodePackages.yaml-language-server
