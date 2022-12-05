@@ -5,6 +5,7 @@
     nix = true;
     rust = true;
     node = true;
+    deno = true;
     docker = true;
     python = true;
     go = true;
