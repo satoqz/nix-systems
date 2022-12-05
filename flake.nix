@@ -141,5 +141,6 @@
           nixpkgs-fmt
         ];
       };
+      formatter = pkgs.alejandra;
     });
 }
