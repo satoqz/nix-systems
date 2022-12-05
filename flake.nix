@@ -133,14 +133,16 @@
     }
     // utils.lib.eachDefaultSystem (system: let
       pkgs = import unstable {inherit system;};
-    in {
-      devShell = pkgs.mkShell {
-        packages = with pkgs; [
-          gnumake
-          rnix-lsp
-          nixpkgs-fmt
-        ];
-      };
       formatter = pkgs.alejandra;
+    in {
+      inherit formatter;
+      devShell = pkgs.mkShell {
+        packages = with pkgs;
+          [
+            gnumake
+            rnix-lsp
+          ]
+          ++ [formatter];
+      };
     });
 }
