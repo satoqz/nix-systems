@@ -110,7 +110,6 @@
       pkgs = import unstable {inherit system;};
     in {
       formatter = pkgs.alejandra;
-      # devShells = import ./shells {inherit pkgs;};
       devShells = import ./shells {inherit pkgs;};
     });
 }

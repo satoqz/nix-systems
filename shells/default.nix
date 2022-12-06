@@ -1,7 +1,5 @@
 {pkgs}:
-with pkgs; rec {
-  default = nix;
-
+with pkgs; {
   nix = pkgs.mkShell {
     packages = [
       rnix-lsp
