@@ -6,12 +6,7 @@
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   boot = {
-    kernelModules = [];
-    extraModulePackages = [];
-    initrd = {
-      availableKernelModules = ["virtio_pci" "xhci_pci" "usb_storage" "usbhid"];
-      kernelModules = [];
-    };
+    initrd.availableKernelModules = ["virtio_pci" "xhci_pci" "usb_storage" "usbhid"];
     loader = {
       systemd-boot.enable = true;
       loader.efi.canTouchEfiVariables = true;
@@ -36,8 +31,6 @@
       "nofail"
     ];
   };
-
-  swapDevices = [];
 
   networking.useDHCP = true;
 }
