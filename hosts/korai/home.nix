@@ -1,6 +1,4 @@
-{
-  programs.helix.buildFromMaster = true;
-
+{pkgs, ...}: {
   home.devtools = {
     nix = true;
     rust = true;
@@ -12,4 +10,8 @@
     latex = true;
     c = true;
   };
+
+  home.packages = [
+    pkgs.satoqz.hash
+  ];
 }

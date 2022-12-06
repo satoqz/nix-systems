@@ -10,9 +10,9 @@
     enable = true;
     casks = [
       "firefox"
-      "iterm2"
-      "utm"
       "visual-studio-code"
+      "warp"
+      "utm"
       "rectangle"
       "discord"
       "slack"

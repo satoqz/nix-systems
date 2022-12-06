@@ -1,6 +1,6 @@
 {stdenvNoCC}:
 stdenvNoCC.mkDerivation rec {
-  pname = "darwin-utils";
+  pname = "scripts";
   version = "main";
 
   src = ./bin;

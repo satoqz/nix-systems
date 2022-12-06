@@ -1,4 +1,8 @@
 {
+  pkgs,
+  lib,
+  ...
+}: {
   programs.zsh = {
     enable = true;
     enableSyntaxHighlighting = true;
@@ -10,6 +14,8 @@
       "rm" = "rm -v";
       "mv" = "mv -v";
       "tmux" = "env TERM=screen-256color tmux";
+      "finder" =
+        lib.mkIf pkgs.stdenv.isDarwin "open -a Finder .";
     };
   };
 

@@ -3,26 +3,46 @@
   lib,
   ...
 }: {
-  home.packages = with pkgs;
-    [
-      coreutils
-      curl
-      wget
-      htop
-      neofetch
-      ripgrep
-      gitui
-      jq
+  home.packages = with pkgs; [
+    coreutils
+    curl
+    wget
+    htop
+    neofetch
+    ripgrep
+    jq
 
-      common-utils
-    ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [
-      darwin-utils
-      hash
-    ];
+    satoqz.scripts
+  ];
 
   programs.zsh.shellAliases = {
     "top" = "htop";
+  };
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    extraConfig = ''
+      set nu
+      set ruler
+      set expandtab
+      set smartindent
+      set tabstop=2
+      set shiftwidth=2
+      set scrolloff=3
+      set laststatus=1
+      set splitright
+      set splitbelow
+      set hidden
+      set wrap
+      set smartcase
+      set autoread
+      set clipboard=unnamed
+
+      augroup Shape autocmd! autocmd VimLeave * set guicursor=a:ver90 augroup END
+    '';
   };
 
   programs.lsd = {

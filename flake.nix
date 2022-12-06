@@ -2,37 +2,35 @@
   description = "satoqz's nix environment";
 
   inputs = {
-    unstable.url = "nixpkgs/nixpkgs-unstable";
+    nixpkgs-unstable.url = "nixpkgs/nixpkgs-unstable";
 
-    nix-darwin-unstable = {
+    darwin-nixpkgs-unstable = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    home-manager-unstable = {
+    home-nixpkgs-unstable = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     nixos-stable.url = "nixpkgs/nixos-22.11";
 
-    home-manager-nixos-stable = {
+    home-nixos-stable = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixos-stable";
     };
 
     utils.url = "github:numtide/flake-utils";
-
-    helix.url = "github:helix-editor/helix";
   };
 
   outputs = {
     self,
-    unstable,
-    nix-darwin-unstable,
-    home-manager-unstable,
+    nixpkgs-unstable,
+    darwin-nixpkgs-unstable,
+    home-nixpkgs-unstable,
     nixos-stable,
-    home-manager-nixos-stable,
+    home-nixos-stable,
     utils,
     ...
   } @ inputs: let
@@ -66,7 +64,7 @@
       hostname,
       user ? defaultUser,
       nixpkgs ? nixos-stable,
-      home-manager ? home-manager-nixos-stable,
+      home-manager ? home-nixos-stable,
       modules ? [],
     }:
       nixpkgs.lib.nixosSystem (mkHost {
@@ -84,9 +82,9 @@
       arch,
       hostname,
       user ? defaultUser,
-      nixpkgs ? unstable,
-      darwin ? nix-darwin-unstable,
-      home-manager ? home-manager-unstable,
+      nixpkgs ? nixpkgs-unstable,
+      darwin ? darwin-nixpkgs-unstable,
+      home-manager ? home-nixpkgs-unstable,
       modules ? [],
     }:
       darwin.lib.darwinSystem (mkHost {
@@ -101,12 +99,12 @@
       });
   in
     {
-      overlays.default = final: prev:
-        with prev.pkgs; {
-          hash = callPackage ./pkgs/hash {};
-          darwin-utils = callPackage ./pkgs/darwin-utils {};
-          common-utils = callPackage ./pkgs/common-utils {};
+      overlays.default = final: prev: {
+        satoqz = {
+          hash = prev.pkgs.callPackage ./pkgs/hash {};
+          scripts = prev.pkgs.callPackage ./pkgs/scripts {};
         };
+      };
 
       nixosModules.default = import ./module/nixos.nix;
 
@@ -132,17 +130,16 @@
       };
     }
     // utils.lib.eachDefaultSystem (system: let
-      pkgs = import unstable {inherit system;};
+      pkgs = import nixpkgs-unstable {inherit system;};
       formatter = pkgs.alejandra;
     in {
       inherit formatter;
       devShell = pkgs.mkShell {
-        packages = with pkgs;
-          [
-            gnumake
-            rnix-lsp
-          ]
-          ++ [formatter];
+        packages = with pkgs; [
+          pkgs.gnumake
+          pkgs.rnix-lsp
+          formatter
+        ];
       };
     });
 }
