@@ -91,16 +91,18 @@
     extraConfig = ''
       set -sa terminal-overrides ",xterm-256color:RGB"
 
+      set -g renumber-windows on
+
       set -g mouse on
 
       set -g status-style default
       set -g status-position bottom
 
       set -g status-left ""
-      set -g status-right ""
+      set -g status-right "#[fg=gray]#H #[fg=black][#[fg=brightred]#S#[fg=black]]"
 
-      setw -g window-status-current-format " #I #[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' ) "
-      setw -g window-status-format " #I #( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )"
+      setw -g window-status-current-format "#[fg=black][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
+      setw -g window-status-format "#[fg=black]#[fg=gray][#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
     '';
   };
 }
