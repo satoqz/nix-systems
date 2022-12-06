@@ -41,7 +41,10 @@
       set autoread
       set clipboard=unnamed
 
-      augroup Shape autocmd! autocmd VimLeave * set guicursor=a:ver90 augroup END
+      augroup OCDFixProviderFactoryBuilder
+        autocmd!
+        autocmd VimLeave * set guicursor=a:ver20
+      augroup END
     '';
   };
 

@@ -2,56 +2,44 @@
   description = "satoqz's nix environment";
 
   inputs = {
-    nixpkgs-unstable.url = "nixpkgs/nixpkgs-unstable";
+    stable.url = "nixpkgs/nixos-22.11";
+    unstable.url = "nixpkgs/nixpkgs-unstable";
 
-    darwin-nixpkgs-unstable = {
+    darwin = {
       url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "unstable";
     };
 
-    home-nixpkgs-unstable = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
-    nixos-stable.url = "nixpkgs/nixos-22.11";
-
-    home-nixos-stable = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixos-stable";
-    };
+    home-manager.url = "github:nix-community/home-manager";
 
     utils.url = "github:numtide/flake-utils";
   };
 
   outputs = {
     self,
-    nixpkgs-unstable,
-    darwin-nixpkgs-unstable,
-    home-nixpkgs-unstable,
-    nixos-stable,
-    home-nixos-stable,
+    stable,
+    unstable,
+    darwin,
+    home-manager,
     utils,
     ...
   } @ inputs: let
-    defaultUser = "satoqz";
+    user = "satoqz";
 
     mkHost = {
       system,
       hostname,
-      user,
-      nixpkgs,
       modules,
-      darwin ? null,
+      nixpkgs,
     }: {
       inherit system;
       specialArgs = {
+        inherit self system hostname user;
+        inputs = inputs // {inherit nixpkgs;};
         pkgs = import nixpkgs {
           overlays = [self.overlays.default];
           inherit system;
         };
-        inputs = inputs // {inherit nixpkgs darwin;};
-        inherit self system hostname user;
       };
       modules = let
         configPath = ./hosts/${hostname}/configuration.nix;
@@ -62,40 +50,29 @@
     mkNixosHost = {
       arch,
       hostname,
-      user ? defaultUser,
-      nixpkgs ? nixos-stable,
-      home-manager ? home-nixos-stable,
-      modules ? [],
+      nixpkgs ? stable,
     }:
       nixpkgs.lib.nixosSystem (mkHost {
+        inherit hostname nixpkgs;
         system = "${arch}-linux";
-        modules =
-          [
-            home-manager.nixosModules.home-manager
-            self.nixosModules.default
-          ]
-          ++ modules;
-        inherit hostname user nixpkgs;
+        modules = [
+          home-manager.nixosModules.home-manager
+          self.nixosModules.default
+        ];
       });
 
     mkDarwinHost = {
       arch,
       hostname,
-      user ? defaultUser,
-      nixpkgs ? nixpkgs-unstable,
-      darwin ? darwin-nixpkgs-unstable,
-      home-manager ? home-nixpkgs-unstable,
-      modules ? [],
     }:
       darwin.lib.darwinSystem (mkHost {
+        inherit hostname;
+        nixpkgs = unstable;
         system = "${arch}-darwin";
-        modules =
-          [
-            home-manager.darwinModules.home-manager
-            self.darwinModules.default
-          ]
-          ++ modules;
-        inherit hostname user nixpkgs darwin;
+        modules = [
+          home-manager.darwinModules.home-manager
+          self.darwinModules.default
+        ];
       });
   in
     {
@@ -107,13 +84,13 @@
       };
 
       nixosModules.default = import ./module/nixos.nix;
-
       darwinModules.default = import ./module/darwin.nix;
 
       nixosConfigurations = {
         tandoori = mkNixosHost {
           hostname = "tandoori";
           arch = "aarch64";
+          nixpkgs = unstable;
         };
 
         dopiaza = mkNixosHost {
@@ -130,16 +107,10 @@
       };
     }
     // utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs-unstable {inherit system;};
-      formatter = pkgs.alejandra;
+      pkgs = import unstable {inherit system;};
     in {
-      inherit formatter;
-      devShell = pkgs.mkShell {
-        packages = with pkgs; [
-          pkgs.gnumake
-          pkgs.rnix-lsp
-          formatter
-        ];
-      };
+      formatter = pkgs.alejandra;
+      # devShells = import ./shells {inherit pkgs;};
+      devShells = import ./shells {inherit pkgs;};
     });
 }

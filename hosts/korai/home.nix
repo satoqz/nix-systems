@@ -1,17 +1,12 @@
 {pkgs, ...}: {
-  home.devtools = {
-    nix = true;
-    rust = true;
-    node = true;
-    deno = true;
-    docker = true;
-    python = true;
-    go = true;
-    latex = true;
-    c = true;
-  };
-
-  home.packages = [
-    pkgs.satoqz.hash
+  home.packages = with pkgs; [
+    docker
+    docker-client
+    colima
+    satoqz.hash
   ];
+
+  home.file.".docker/cli-plugins/docker-compose".source = "${pkgs.docker-compose}/bin/docker-compose";
+
+  programs.zsh.profileExtra = "eval $(/opt/homebrew/bin/brew shellenv)";
 }

@@ -9,6 +9,7 @@
     enableAutosuggestions = true;
     enableCompletion = true;
     autocd = true;
+    dotDir = ".config/zsh";
     shellAliases = {
       "cp" = "cp -v";
       "rm" = "rm -v";
@@ -24,28 +25,20 @@
     enableZshIntegration = true;
     settings = {
       add_newline = false;
-      format = ''
-        $username@$hostname $directory$git_branch$git_status$nix_shell
-        $character
-      '';
-      character = {
-        success_symbol = "[\\$](bold green)";
-        error_symbol = "[\\$](bold red)";
-        vicmd_symbol = "[v](bold green)";
-      };
+      format = "$username@$hostname$nix_shell ";
+      right_format = "$git_status$directory$git_branch";
       username = {
         show_always = true;
-        style_user = "bold green";
-        format = "[$user]($style)";
+        format = "[$user](black)";
       };
       hostname = {
         ssh_only = false;
-        style = "white";
-        format = "[$hostname]($style)";
+        format = "[$hostname](black)";
       };
-      directory = {format = "[$path]($style) ";};
-      git_branch = {format = "[$branch(:$remote_branch)]($style) ";};
-      nix_shell = {format = "[*]($style) ";};
+      directory.format = "[$path](green)";
+      git_status.format = " [<](black)[$all_status$ahead$behind]($style)[>](black) ";
+      git_branch.format = ".[$branch(:$remote_branch)](black)";
+      nix_shell.format = " [<](black)[nix]($style)[>](black)";
     };
   };
 }
