@@ -39,8 +39,6 @@ with lib; {
 
     security.sudo.wheelNeedsPassword = false;
 
-    time.timeZone = "Europe/Berlin";
-
     console = {
       font = "Lat2-Terminus16";
       keyMap = "us";

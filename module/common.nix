@@ -18,6 +18,8 @@
 
   environment.pathsToLink = ["/share/zsh"];
 
+  time.timeZone = "Europe/Berlin";
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
