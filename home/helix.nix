@@ -24,6 +24,7 @@
       true-color = true;
       cursorline = true;
       color-modes = true;
+      bufferline = "multiple";
       cursor-shape.insert = "bar";
       indent-guides.render = true;
     };
@@ -33,8 +34,6 @@
   programs.helix.languages = [
     {
       name = "nix";
-      language-server.command = "nil";
-      config.nil.formatting.command = ["alejandra"];
       auto-format = true;
     }
   ];
