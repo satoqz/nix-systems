@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+[ -z "$1" ] && exit 1
+
+add_if_not_exists() {
+	if [[ ! -f "$2" ]] || [[ -z $(grep "$1" "$2") ]]; then
+		echo "$1" >> "$2"
+	fi
+}
+
+add_if_not_exists "use flake github:satoqz/nix-systems#$1" .envrc
+
+if [ -d ".git" ]; then
+	add_if_not_exists .envrc .git/info/exclude
+	add_if_not_exists .direnv .git/info/exclude
+fi
+
+direnv allow
+

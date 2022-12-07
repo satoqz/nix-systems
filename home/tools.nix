@@ -8,6 +8,7 @@
     curl
     wget
     htop
+    gitui
     neofetch
     ripgrep
     jq
@@ -17,35 +18,6 @@
 
   programs.zsh.shellAliases = {
     "top" = "htop";
-  };
-
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-    extraConfig = ''
-      set nu
-      set ruler
-      set expandtab
-      set smartindent
-      set tabstop=2
-      set shiftwidth=2
-      set scrolloff=3
-      set laststatus=1
-      set splitright
-      set splitbelow
-      set hidden
-      set wrap
-      set smartcase
-      set autoread
-      set clipboard=unnamed
-
-      augroup OCDFixProviderFactoryBuilder
-        autocmd!
-        autocmd VimLeave * set guicursor=a:ver20
-      augroup END
-    '';
   };
 
   programs.lsd = {
@@ -94,6 +66,9 @@
       set -g renumber-windows on
 
       set -g mouse on
+
+      set -g pane-active-border-style fg=black
+      set -g pane-border-style fg=black
 
       set -g status-style default
       set -g status-position bottom

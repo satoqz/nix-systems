@@ -1,10 +1,17 @@
 {pkgs}:
 with pkgs; {
-  nix = pkgs.mkShell {
+  default = pkgs.mkShell {
     packages = [
-      rnix-lsp
+      nil
       alejandra
       gnumake
+    ];
+  };
+
+  nix = pkgs.mkShell {
+    packages = [
+      nil
+      alejandra
     ];
   };
 
@@ -37,6 +44,7 @@ with pkgs; {
       cargo
       cargo-watch
       clippy
+      taplo
     ];
   };
 
@@ -46,6 +54,7 @@ with pkgs; {
       nodePackages.yarn
       nodePackages.pnpm
       nodePackages.prettier
+      nodePackages.typescript-language-server
     ];
   };
 
@@ -58,6 +67,7 @@ with pkgs; {
       (python3.withPackages
         (ps: [
           ps.pip
+          ps.pyls
           ps.pylint
         ]))
     ];

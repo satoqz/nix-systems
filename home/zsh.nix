@@ -36,8 +36,8 @@
         format = "[$hostname](black)";
       };
       directory.format = "[$path](green)";
-      git_status.format = " [<](black)[$all_status$ahead$behind]($style)[>](black) ";
-      git_branch.format = ".[$branch(:$remote_branch)](black)";
+      git_status.format = " ([<](black)[$all_status$ahead$behind]($style)[>](black)) ";
+      git_branch.format = " [# $branch(:$remote_branch)](black)";
       nix_shell.format = " [<](black)[nix]($style)[>](black)";
     };
   };
