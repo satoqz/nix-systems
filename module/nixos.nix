@@ -45,6 +45,7 @@ with lib; {
     };
 
     system.autoUpgrade = mkIf autoUpgrade.enable {
+      dates = "Sun, 03:33:33";
       flake = self.outPath;
       flags = [
         "--recreate-lock-file"
