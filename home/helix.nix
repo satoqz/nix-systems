@@ -1,5 +1,12 @@
 {
+  inputs,
+  pkgs,
+  ...
+}: {
   programs.helix.enable = true;
+
+  programs.helix.package = inputs.helix.packages.${pkgs.system}.default;
+
   programs.zsh.shellAliases = {
     vi = "hx";
     vim = "hx";

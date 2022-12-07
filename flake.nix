@@ -12,6 +12,8 @@
 
     home-manager.url = "github:nix-community/home-manager";
 
+    helix.url = "github:helix-editor/helix";
+
     utils.url = "github:numtide/flake-utils";
   };
 
@@ -112,4 +114,9 @@
       formatter = pkgs.alejandra;
       devShells = import ./shells {inherit pkgs;};
     });
+
+  nixConfig = {
+    extra-substitutors = ["https://helix.cachix.org"];
+    extra-trusted-public-keys = ["helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="];
+  };
 }
