@@ -19,7 +19,7 @@ in {
       system = "x86_64-linux";
       config = {user, ...}: {
         imports = [
-          inputs.arion.nixosModules.default
+          inputs.arion.nixosModules.arion
           ./modules/ssh.nix
           ./modules/autonomy.nix
         ];

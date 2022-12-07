@@ -29,6 +29,7 @@ in {
       in
         (nixpkgs.lib.optional (builtins.pathExists hardware) hardware)
         ++ [
+          config
           home-manager
           .${
             if isDarwin

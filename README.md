@@ -1,6 +1,6 @@
 # Nix Systems
 
-Personal infrastructure.
+Personal infrastructure
 
 ```sh
 .
