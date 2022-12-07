@@ -34,6 +34,7 @@
   programs.helix.languages = [
     {
       name = "nix";
+      formatter.command = "alejandra";
       auto-format = true;
     }
   ];
