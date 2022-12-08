@@ -27,12 +27,14 @@
 
     inherit (import ./modules inputs) nixosModules darwinModules;
 
+    inherit (import ./pkgs inputs) overlays packages;
+
+    inherit (import ./shells inputs) devShells formatter;
+
     hmModules = import ./home;
 
     lib = import ./lib inputs;
 
-    inherit (import ./pkgs inputs) overlays packages;
-
-    inherit (import ./shells inputs) devShells formatter;
+    config = import ./config.nix;
   };
 }
