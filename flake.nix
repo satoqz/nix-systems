@@ -19,8 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    helix.url = "github:helix-editor/helix";
-
     flake-utils.url = "github:numtide/flake-utils";
   };
 
