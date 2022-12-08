@@ -4,12 +4,11 @@ Personal infrastructure
 
 ```sh
 .
-├── flake.nix       # dependencies
-├── shells.nix      # collection of development shells
-├── hosts.nix       # system definitions
-├── utils.nix       # utilities for host management
-├── home.nix        # home-manager configuration
-├── hardware        # hardware configuration
-├── modules/        # nixos modules
-└── pkgs/           # personal packages
+├── flake.nix           # dependencies
+├── systems/            # nixos and darwin systems
+├── modules/            # nixos and darwin modules
+├── home/               # home-manager modules
+├── pkgs/               # personal package collection
+├── shells/             # various development shells
+├── lib/                # utility
 ```

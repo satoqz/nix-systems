@@ -1,9 +1,10 @@
 {
   lib,
+  pkgs,
   rustPlatform,
   darwin,
 }:
-rustPlatform.buildRustPackage rec {
+rustPlatform.buildRustPackage {
   name = "hash";
   version = "main";
 
@@ -12,7 +13,7 @@ rustPlatform.buildRustPackage rec {
     rev = "ea4c8a78fd2ee40150b2e48b72755c2b3cfac3d7";
   };
 
-  buildInputs = [darwin.apple_sdk.frameworks.AppKit];
+  buildInputs = lib.optional pkgs.stdenv.isDarwin darwin.apple_sdk.frameworks.AppKit;
 
   sourceRoot = "source/cli";
 

@@ -21,9 +21,20 @@
 
     helix.url = "github:helix-editor/helix";
 
-    utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs:
-    import ./hosts.nix inputs // import ./shells.nix inputs;
+  outputs = inputs: {
+    inherit (import ./systems inputs) nixosConfigurations darwinConfigurations;
+
+    inherit (import ./modules inputs) nixosModules darwinModules;
+
+    hmModules = import ./home;
+
+    lib = import ./lib inputs;
+
+    inherit (import ./pkgs inputs) overlays packages;
+
+    inherit (import ./shells inputs) devShells formatter;
+  };
 }

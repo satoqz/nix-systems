@@ -1,13 +1,15 @@
+# shortcuts for quick iteration of configs
+
 uname = $(shell uname)
 
 ifeq (Darwin, $(uname))
 	tool = darwin-rebuild
 else
-	tool = nixos-rebuild
+	tool = sudo nixos-rebuild
 endif
 
 build:
-	$(tool) build --flake .#
+	$(tool) build --flake .
 
 switch:
-	$(tool) switch --flake .#
+	$(tool) switch --flake .

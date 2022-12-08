@@ -1,5 +1,5 @@
 inputs: let
-  inherit (inputs) nixpkgs utils;
+  inherit (inputs) nixpkgs flake-utils;
   shells = pkgs:
     with pkgs; {
       default = mkShell {
@@ -84,7 +84,7 @@ inputs: let
       };
     };
 in
-  utils.lib.eachDefaultSystem (system: let
+  flake-utils.lib.eachDefaultSystem (system: let
     pkgs = import nixpkgs {inherit system;};
   in {
     formatter = pkgs.alejandra;
