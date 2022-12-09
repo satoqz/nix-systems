@@ -5,7 +5,6 @@
 }: let
   packages = pkgs: {
     scripts = pkgs.callPackage ./scripts {};
-    hash = pkgs.callPackage ./hash {};
   };
 in
   {
