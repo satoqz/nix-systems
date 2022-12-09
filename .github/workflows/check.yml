@@ -1,6 +1,6 @@
 name: Check flake
 
-on: [push, pull-request]
+on: [push, pull_request]
 
 jobs:
   check:
