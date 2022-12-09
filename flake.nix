@@ -19,8 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    helix.url = "github:helix-editor/helix";
-
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -29,12 +27,14 @@
 
     inherit (import ./modules inputs) nixosModules darwinModules;
 
+    inherit (import ./pkgs inputs) overlays packages;
+
+    inherit (import ./shells inputs) devShells formatter;
+
     hmModules = import ./home;
 
     lib = import ./lib inputs;
 
-    inherit (import ./pkgs inputs) overlays packages;
-
-    inherit (import ./shells inputs) devShells formatter;
+    config = import ./config.nix;
   };
 }

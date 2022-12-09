@@ -31,7 +31,7 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {
-          inherit inputs;
+          inherit inputs self;
           home = self.hmModules;
         };
         users.${user} = {
@@ -78,7 +78,7 @@
   mkSystem = {
     system,
     hostname,
-    user ? "satoqz",
+    user ? self.config.defaultUser,
   }: let
     isDarwin = nixpkgs.lib.hasSuffix "darwin" system;
     key =
@@ -100,7 +100,7 @@
         ++ self.lib.optionalPath ../systems/${hostname}/configuration.nix
         ++ self.lib.optionalPath ../systems/${hostname}/hardware-configuration.nix;
       specialArgs = {
-        inherit inputs user hostname;
+        inherit inputs self user hostname;
         modules = self.${key};
       };
     };

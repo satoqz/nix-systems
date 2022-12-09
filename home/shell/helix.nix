@@ -5,8 +5,6 @@
 }: {
   programs.helix.enable = true;
 
-  programs.helix.package = inputs.helix.packages.${pkgs.system}.default;
-
   home.sessionVariables = {
     EDITOR = "hx";
     VISUAL = "hx";

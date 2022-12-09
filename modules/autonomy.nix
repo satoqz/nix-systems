@@ -1,18 +1,14 @@
 {
   lib,
   config,
-  inputs,
+  self,
   ...
 }: {
   system.autoUpgrade = {
     enable = true;
-    flake = inputs.self.outPath;
+    flake = self.config.flakeUrl;
     dates = "Sun, 01:11:11";
-    flags = [
-      "--recreate-lock-file"
-      "--no-write-lock-file"
-      "-L"
-    ];
+    flags = ["-L"];
   };
 
   nix.gc = {
