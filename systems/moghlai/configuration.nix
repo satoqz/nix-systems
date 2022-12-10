@@ -5,7 +5,7 @@
 }: {
   imports = with modules; [
     ssh-server
-    self-management
+    # self-management
     selfhosted-services
   ];
 
