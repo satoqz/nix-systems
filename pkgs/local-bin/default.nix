@@ -4,7 +4,7 @@
   makeWrapper,
 }:
 stdenvNoCC.mkDerivation {
-  pname = "scripts";
+  pname = "local-bin";
   version = "main";
 
   src = ./bin;

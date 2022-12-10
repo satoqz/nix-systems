@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    satoqz.scripts
+    local-bin
     cachix
     coreutils
     curl
