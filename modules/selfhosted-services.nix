@@ -33,6 +33,9 @@
         "--certificatesresolvers.letsEncrypt.acme.httpchallenge.entrypoint=web"
         "--log.level=INFO"
       ];
+      extraOptions = [
+        "--network=internal"
+      ];
       volumes = [
         "traefik-acme:/srv/acme"
         "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -47,6 +50,7 @@
     redis = {
       image = "docker.io/redis:alpine";
       extraOptions = [
+        "--network=internal"
         "--tmpfs=/var/lib/redis"
       ];
       cmd = [
@@ -55,24 +59,70 @@
       ];
     };
 
-    searx = {
+    searx = let
+      settings = {
+        use_default_settings = true;
+        redis.url = "redis://redis:6379/0";
+        server = {
+          instance_name = "${config.networking.domain}";
+          base_url = "https://${config.networking.domain}";
+          limiter = true;
+          image_proxy = true;
+          method = "POST";
+          http_protocol_version = "1.1";
+        };
+        ui = {
+          static_use_hash = true;
+          infinite_scroll = true;
+          center_alignment = true;
+          results_on_new_tab = true;
+          query_in_title = true;
+        };
+        search = {
+          autocomplete = "duckduckgo";
+          autocomplete_min = 4;
+          safe_search = 2;
+        };
+        enabled_plugins = [
+          "Hash plugin"
+          "Search on category select"
+          "Tracker URL remover"
+          "Vim-like hotkeys"
+          "Hostname replace"
+        ];
+        hostname_replace = {
+          "(.*\\.)?reddit.com$" = "libreddit.de";
+          "(.*\\.)?twitter.com$" = "nitter.net";
+        };
+      };
+    in {
       image = "docker.io/searxng/searxng:latest";
-      dependsOn = ["redis"];
-      volumes = ["${toString ./.}/searx.yml:/etc/searxng/settings.yml"];
+      volumes = [
+        "${builtins.toFile "settings.yml" (builtins.toJSON settings)}:/etc/searxng/settings.yml"
+      ];
       extraOptions = [
+        "--network=internal"
+        "--entrypoint=/bin/sh"
         "--rm" # because searxng is weird
         "-l=traefik.enable=true"
-        "-l=traefik.http.routers.searx.rule=Host(`trench.world`) || Host(`searx.coffeeco.dev`)"
+        "-l=traefik.http.routers.searx.rule=Host(`${config.networking.domain}`) || Host(`searx.coffeeco.dev`)"
         "-l=traefik.http.routers.searx.tls=true"
         "-l=traefik.http.routers.searx.tls.certresolver=letsEncrypt"
       ];
+      cmd = [
+        "-c"
+        # no need for a persistent secret
+        "export SEARXNG_SECRET=$(openssl rand -base64 128) && exec /sbin/tini -- /usr/local/searxng/dockerfiles/docker-entrypoint.sh"
+      ];
+      dependsOn = ["redis"];
     };
 
     rapla = {
       image = "ghcr.io/satoqz/rapla-to-ics:latest";
       extraOptions = [
+        "--network=internal"
         "-l=traefik.enable=true"
-        "-l=traefik.http.routers.rapla.rule=Host(`blade.trench.world`)"
+        "-l=traefik.http.routers.rapla.rule=Host(`blade.${config.networking.domain}`)"
         "-l=traefik.http.routers.rapla.tls=true"
         "-l=traefik.http.routers.rapla.tls.certresolver=letsEncrypt"
       ];
