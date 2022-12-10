@@ -4,5 +4,7 @@
     ssh = import ./ssh.nix;
   };
 
-  darwinModules = {};
+  darwinModules = {
+    homebrew = import ./homebrew.nix;
+  };
 }
