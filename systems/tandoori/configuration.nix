@@ -1,5 +1,5 @@
 {modules, ...}: {
-  imports = [modules.ssh];
+  imports = [modules.ssh-server];
 
   networking.firewall.enable = false;
 }

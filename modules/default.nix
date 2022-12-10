@@ -1,10 +1,11 @@
 {self, ...}: {
   nixosModules = {
-    autonomy = import ./autonomy.nix;
-    ssh = import ./ssh.nix;
+    self-management = import ./self-management.nix;
+    selfhosted-services = import ./selfhosted-services.nix;
+    ssh-server = import ./ssh-server.nix;
   };
 
   darwinModules = {
-    homebrew = import ./homebrew.nix;
+    homebrew-casks = import ./homebrew-casks.nix;
   };
 }
