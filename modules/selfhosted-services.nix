@@ -6,9 +6,13 @@
   config,
   ...
 }: {
+  imports = [modules.docker-addons];
+
   virtualisation.docker.enable = true;
 
   virtualisation.oci-containers.backend = "docker";
+
+  virtualisation.docker.networks = ["internal"];
 
   virtualisation.oci-containers.containers = {
     watchtower = {
