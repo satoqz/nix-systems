@@ -1,3 +1,7 @@
+# module that enables autonomous management of a system, i.e.
+# - automated system upgrades using the upstream flake
+# - automated nix garbage collection
+# - automated docker garbage collection
 {
   lib,
   config,

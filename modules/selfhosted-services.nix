@@ -1,3 +1,4 @@
+# a collection of services that i self-host via docker containers
 {
   self,
   modules,

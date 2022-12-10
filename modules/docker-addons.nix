@@ -1,3 +1,4 @@
+# module that extends `virtualisation.docker` with declarative networks (yet very basic)
 {
   lib,
   config,
