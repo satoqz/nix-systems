@@ -1,3 +1,6 @@
 {home, ...}: {
-  imports = [home.docker-darwin];
+  imports = [
+    home.docker-darwin
+    home.firefox
+  ];
 }

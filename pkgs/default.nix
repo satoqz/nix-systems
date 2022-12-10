@@ -4,23 +4,23 @@
   ...
 }: let
   mkPackages.common = pkgs: {
-    scripts = pkgs.callPackage ./scripts {inherit (self) config;};
+    satoqz.scripts = pkgs.callPackage ./scripts {inherit (self) config;};
   };
 
   mkPackages.linux = pkgs: {
   };
 
   mkPackages.darwin = pkgs: {
+    firefox = pkgs.runCommand "firefox-0.0.0" {} "mkdir $out";
   };
 in {
   overlays.default = _: prev:
-    with prev; {
-      satoqz = self.lib.mergeAttrs (map (f: f pkgs) [
+    with prev;
+      self.lib.mergeAttrs (map (f: f pkgs) [
         mkPackages.common
         mkPackages.linux
         mkPackages.darwin
       ]);
-    };
 
   packages = with self.lib;
     forAllSystems (system: let
