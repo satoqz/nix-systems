@@ -13,6 +13,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rapla.url = "github:satoqz/rapla-to-ics";
   };
 
   outputs = inputs: {
