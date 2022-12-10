@@ -3,7 +3,11 @@
   user,
   ...
 }: {
-  imports = with modules; [ssh autonomy];
+  imports = with modules; [
+    ssh-server
+    self-management
+    selfhosted-services
+  ];
 
   virtualisation.docker.enable = true;
   users.users.${user}.extraGroups = ["docker"];

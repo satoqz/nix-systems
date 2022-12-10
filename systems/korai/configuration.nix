@@ -1,5 +1,5 @@
 {modules, ...}: {
-  imports = [modules.homebrew];
+  imports = [modules.homebrew-casks];
 
   homebrew.casks = [
     "firefox"
