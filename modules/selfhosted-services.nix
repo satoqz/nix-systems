@@ -70,7 +70,6 @@
 
     rapla = {
       image = "ghcr.io/satoqz/rapla-to-ics:latest";
-      volumes = ["${toString ./.}/:/test"];
       extraOptions = [
         "-l=traefik.enable=true"
         "-l=traefik.http.routers.rapla.rule=Host(`blade.trench.world`)"
