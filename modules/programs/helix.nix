@@ -1,20 +1,9 @@
 {
-  inputs,
-  pkgs,
+  lib,
+  config,
   ...
 }: {
-  programs.helix.enable = true;
-
-  home.sessionVariables = {
-    EDITOR = "hx";
-    VISUAL = "hx";
-  };
-
-  programs.zsh.shellAliases = {
-    vi = "hx";
-    vim = "hx";
-    nvim = "hx";
-  };
+  programs.helix.enable = lib.mkDefault true;
 
   programs.helix.settings = {
     theme = "gruvbox";
@@ -36,4 +25,15 @@
       auto-format = true;
     }
   ];
+
+  home.sessionVariables = lib.mkIf config.programs.helix.enable {
+    EDITOR = "hx";
+    VISUAL = "hx";
+  };
+
+  programs.zsh.shellAliases = lib.mkIf config.programs.helix.enable {
+    vi = "hx";
+    vim = "hx";
+    nvim = "hx";
+  };
 }

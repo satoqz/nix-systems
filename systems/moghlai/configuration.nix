@@ -1,16 +1,8 @@
 {
-  modules,
-  user,
-  ...
-}: {
-  imports = with modules; [
-    ssh-server
-    self-management
-    selfhosted-services
-  ];
-
-  virtualisation.docker.enable = true;
-  users.users.${user}.extraGroups = ["docker"];
+  services = {
+    openssh.enable = true;
+    self-management.enable = true;
+  };
 
   networking.domain = "trench.world";
 }
