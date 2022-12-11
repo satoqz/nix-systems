@@ -6,6 +6,7 @@
     "iterm2"
     "visual-studio-code"
     "utm"
+    "sioyek"
     "rectangle"
     "discord"
     "slack"
