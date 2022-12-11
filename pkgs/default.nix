@@ -6,11 +6,6 @@
   # packages that work on all platforms
   mkPackages.common = pkgs: {
     local-bin = pkgs.callPackage ./local-bin {inherit (self) config;};
-
-    firefox =
-      if pkgs.stdenv.isDarwin
-      then pkgs.runCommand "firefox-0.0.0" {} "mkdir $out"
-      else pkgs.firefox;
   };
 
   # packages that exclusively work on linux
