@@ -6,6 +6,7 @@ let
       ./firefox.nix
       ./helix.nix
       ./git.nix
+      ./sioyek.nix
       ./starship.nix
       ./tmux.nix
       ./tools.nix
