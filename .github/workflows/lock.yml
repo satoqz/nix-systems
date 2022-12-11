@@ -22,5 +22,6 @@ jobs:
         uses: DeterminateSystems/update-flake-lock@v15
         with:
           token: ${{ secrets.GH_TOKEN_FLAKE_LOCK_UPDATES }}
+          pr-title: "chore(flake.lock): update inputs"
           pr-labels: |
             automated

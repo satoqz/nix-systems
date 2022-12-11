@@ -1,3 +1,4 @@
+# sets up docker for use on darwin
 {pkgs, ...}: {
   home.packages = with pkgs; [
     docker-client
