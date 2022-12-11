@@ -8,8 +8,11 @@ rec {
   # url used any time the flake refers to itself (e.g. for upgrades)
   flakeUrl = "github:${git.user}/nix-systems";
 
-  # default user name used in `lib.{nixosSystem|darwinSystem}`
-  defaultUser = git.user;
+  # default system timezone
+  timeZone = "Europe/Berlin";
+
+  # allow unfree packages
+  allowUnfree = true;
 
   # substituters installed in the systems
   substituters = [

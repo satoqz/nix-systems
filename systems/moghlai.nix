@@ -1,4 +1,16 @@
 {modulesPath, ...}: {
+  # config
+
+  services = {
+    openssh.enable = true;
+    caretaker.enable = true;
+    selfhosted.enable = true;
+  };
+
+  networking.domain = "trench.world";
+
+  # hardware
+
   imports = [(modulesPath + "/profiles/qemu-guest.nix")];
 
   zramSwap.enable = true;

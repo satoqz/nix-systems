@@ -53,41 +53,108 @@
   # return `[path]` if `path` exists, else `[]`
   optionalPath = path: nixpkgs.lib.optional (builtins.pathExists path) path;
 
+  # generate nix defaults based on the user
+  mkNixConfig = user: {
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    settings = {
+      experimental-features = "nix-command flakes";
+      trusted-users = ["root" user];
+      extra-substituters = map (it: it.url) self.config.substituters;
+      extra-trusted-public-keys = map (it: it.publicKey) self.config.substituters;
+    };
+  };
+
+  # generate home-manager defaults based on user user
+  mkHomeManagerConfig = user:
+    with nixpkgs.lib; {
+      useGlobalPkgs = mkDefault true;
+      useUserPackages = mkDefault true;
+      extraSpecialArgs = {
+        inherit inputs self;
+      };
+      users.${user} = {
+        home.stateVersion = "22.11";
+        imports = [self.homeManagerModules.default];
+      };
+    };
+
   # `nixpkgs.lib.nixosSystem` wrapper
   nixosSystem = {
     arch,
     hostname,
-    user ? self.config.defaultUser,
+    user,
+    config ? {},
   }: let
     system = includesOrThrow systems.linux "${arch}-linux";
   in
     nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = {
-        inherit inputs self user hostname;
+        inherit self inputs user;
       };
-      modules =
-        [self.nixosModules.default]
-        ++ optionalPath ../systems/${hostname}/configuration.nix
-        ++ optionalPath ../systems/${hostname}/hardware-configuration.nix;
+      modules = [
+        config
+        self.nixosModules.default
+        inputs.home-manager.nixosModules.home-manager
+        ({pkgs, ...}: {
+          networking.hostName = hostname;
+
+          nix = mkNixConfig user;
+          home-manager = mkHomeManagerConfig user;
+
+          nixpkgs.config.allowUnfree = self.config.allowUnfree;
+
+          time.timeZone = nixpkgs.lib.mkDefault self.config.timeZone;
+
+          users.users.${user} = {
+            isNormalUser = true;
+            extraGroups = ["wheel"];
+            shell = pkgs.zsh;
+          };
+
+          security.sudo.wheelNeedsPassword = nixpkgs.lib.mkDefault false;
+
+          system.stateVersion = "22.11";
+        })
+      ];
     };
 
   # `darwin.lib.darwinSystem` wrapper
   darwinSystem = {
     arch,
     hostname,
-    user ? self.config.defaultUser,
+    user,
+    config ? {},
   }: let
     system = includesOrThrow systems.darwin "${arch}-darwin";
   in
     darwin.lib.darwinSystem {
       inherit system;
       specialArgs = {
-        inherit inputs self user hostname;
+        inherit self inputs user;
       };
-      modules =
-        [self.darwinModules.default]
-        ++ optionalPath ../systems/${hostname}/configuration.nix;
+      modules = [
+        config
+        self.darwinModules.default
+        inputs.home-manager.darwinModules.home-manager
+        ({pkgs, ...}: {
+          networking.hostName = hostname;
+
+          nix = mkNixConfig user;
+          home-manager = mkHomeManagerConfig user;
+
+          users.users.${user}.shell = pkgs.zsh;
+          # darwin requires global zsh for things to link up properly
+          programs.zsh.enable = true;
+          environment.pathsToLink = ["/share/zsh"];
+
+          nixpkgs.config.allowUnfree = self.config.allowUnfree;
+
+          services.nix-daemon.enable = true;
+
+          system.stateVersion = 4;
+        })
+      ];
     };
 
   # utility variable that summarizes all system outputs under a uniform path (useful for automation)

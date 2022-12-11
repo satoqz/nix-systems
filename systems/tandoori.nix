@@ -1,9 +1,10 @@
 {
-  lib,
-  modulesPath,
-  ...
-}: {
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  # config
+
+  services.openssh.enable = true;
+  networking.firewall.enable = false;
+
+  # hardware
 
   boot = {
     initrd.availableKernelModules = ["virtio_pci" "xhci_pci" "usb_storage" "usbhid"];
@@ -31,6 +32,8 @@
       "nofail"
     ];
   };
+
+  hardware.enableRedistributableFirmware = true;
 
   networking.useDHCP = true;
 }

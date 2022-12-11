@@ -1,14 +1,3 @@
 # Nix Systems
 
-Personal infrastructure
-
-```sh
-.
-├── flake.nix           # dependencies
-├── config.nix          # constants
-├── systems/            # nixos and darwin systems
-├── modules/            # nixos and darwin modules
-├── pkgs/               # personal package collection
-├── shells/             # various development shells
-├── lib/                # utility
-```
+My NixOS systems, Nix-Darwin systems and all the baggage that comes with them
