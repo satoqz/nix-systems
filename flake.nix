@@ -18,7 +18,7 @@
   outputs = inputs: {
     inherit (import ./systems inputs) nixosConfigurations darwinConfigurations;
 
-    inherit (import ./modules inputs) nixosModules darwinModules;
+    inherit (import ./modules) nixosModules darwinModules;
 
     inherit (import ./shells inputs) devShells formatter;
 
@@ -27,7 +27,5 @@
     config = import ./config.nix;
 
     lib = import ./lib inputs;
-
-    hmModules = import ./home;
   };
 }

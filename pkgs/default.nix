@@ -3,25 +3,29 @@
   nixpkgs,
   ...
 }: let
+  # packages that work on all platforms
   mkPackages.common = pkgs: {
-    scripts = pkgs.callPackage ./scripts {inherit (self) config;};
+    local-bin = pkgs.callPackage ./local-bin {inherit (self) config;};
   };
 
+  # packages that exclusively work on linux
   mkPackages.linux = pkgs: {
   };
 
+  # packages that exclusively work on darwin
   mkPackages.darwin = pkgs: {
   };
 in {
+  # all packages in an overlay
   overlays.default = _: prev:
-    with prev; {
-      satoqz = self.lib.mergeAttrs (map (f: f pkgs) [
+    with prev;
+      self.lib.mergeAttrs (map (f: f pkgs) [
         mkPackages.common
         mkPackages.linux
         mkPackages.darwin
       ]);
-    };
 
+  # packages based on what platform is used
   packages = with self.lib;
     forAllSystems (system: let
       pkgs = pkgsFor system;

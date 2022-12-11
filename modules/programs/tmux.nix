@@ -1,10 +1,10 @@
 {
-  programs.zsh.shellAliases = {
-    tmux = "env TERM=screen-256color tmux";
-  };
-
+  lib,
+  config,
+  ...
+}: {
   programs.tmux = {
-    enable = true;
+    enable = lib.mkDefault true;
     keyMode = "vi";
     baseIndex = 1;
     escapeTime = 0;
@@ -30,5 +30,9 @@
       setw -g window-status-current-format "#[fg=black][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
       setw -g window-status-format "#[fg=black]#[fg=gray][#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
     '';
+  };
+
+  programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable {
+    tmux = "env TERM=screen-256color tmux";
   };
 }
