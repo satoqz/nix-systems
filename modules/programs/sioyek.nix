@@ -5,9 +5,8 @@
   ...
 }: {
   programs.sioyek.package =
-    if pkgs.stdenv.isDarwin
-    then (pkgs.runCommand "sioyek-dummy" {} "mkdir $out")
-    else pkgs.sioyek;
+    lib.mkIf pkgs.stdenv.isDarwin
+    (pkgs.runCommand "sioyek-dummy" {} "mkdir $out");
 
   casks = lib.optional config.programs.sioyek.enable "sioyek";
 

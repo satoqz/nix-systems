@@ -5,9 +5,8 @@
   ...
 }: {
   programs.firefox.package =
-    if pkgs.stdenv.isDarwin
-    then (pkgs.runCommand "firefox-dummy" {} "mkdir $out")
-    else pkgs.firefox;
+    lib.mkIf pkgs.stdenv.isDarwin
+    (pkgs.runCommand "firefox-dummy" {} "mkdir $out");
 
   casks = lib.optional config.programs.firefox.enable "firefox";
 }

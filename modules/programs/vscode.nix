@@ -5,9 +5,8 @@
   ...
 }: {
   programs.vscode.package =
-    if pkgs.stdenv.isDarwin
-    then (pkgs.runCommand "vscode-dummy" {} "mkdir $out")
-    else pkgs.vscode;
+    lib.mkIf pkgs.stdenv.isDarwin
+    (pkgs.runCommand "vscode-dummy" {} "mkdir $out");
 
   casks = lib.optional config.programs.vscode.enable "visual-studio-code";
 }
