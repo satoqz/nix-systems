@@ -11,4 +11,6 @@
       "homebrew/cask"
     ];
   };
+
+  environment.extraInit = "eval $(/opt/homebrew/bin/brew shellenv)";
 }
