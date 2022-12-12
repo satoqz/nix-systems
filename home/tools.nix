@@ -6,7 +6,7 @@
 }: {
   home.packages = with pkgs;
     [
-      self.packages.${pkgs.system}.local-bin
+      local-bin
       cachix
       coreutils
       curl

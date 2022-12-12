@@ -1,4 +1,5 @@
 {
+  pkgs,
   lib,
   config,
   ...
@@ -11,25 +12,35 @@
     historyLimit = 100000;
     disableConfirmationPrompt = true;
     terminal = "xterm-256color";
-    extraConfig = ''
-      set -sa terminal-overrides ",xterm-256color:RGB"
+    extraConfig =
+      ''
+        set -sa terminal-overrides ",xterm-256color:RGB"
 
-      set -g renumber-windows on
+        set -g renumber-windows on
 
-      set -g mouse on
+        set -g mouse on
 
-      set -g pane-active-border-style fg=white
-      set -g pane-border-style fg=white
+        set -g pane-active-border-style fg=black
+        set -g pane-border-style fg=black
 
-      set -g status-style default
-      set -g status-position bottom
+        set -g status-style default
+        set -g status-position bottom
 
-      set -g status-left ""
-      set -g status-right "#[fg=white]#H [#[fg=brightred]#S#[fg=white]]"
+        set -g status-left ""
+        set -g status-right "#[fg=gray]#H #[fg=black][#[fg=brightred]#S#[fg=black]]"
 
-      setw -g window-status-current-format "#[fg=white][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=white]] "
-      setw -g window-status-format "#[fg=white][#[fg=gray]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=white]] "
-    '';
+        setw -g window-status-current-format "#[fg=black][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
+        setw -g window-status-format "#[fg=black][#[fg=gray]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
+      ''
+      + lib.optionalString pkgs.stdenv.isDarwin ''
+        unbind -T copy-mode-vi MouseDragEnd1Pane
+        bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel\; run "tmux save-buffer - | pbcopy"
+        unbind -T copy-mode-vi Enter
+        bind -T copy-mode-vi Enter send -X copy-selection-and-cancel\; run "tmux save-buffer - | pbcopy"
+      ''
+      + lib.optionalString pkgs.stdenv.isLinux ''
+        set -s set-clipboard on
+      '';
   };
 
   programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable {

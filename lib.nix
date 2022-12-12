@@ -41,7 +41,10 @@
   forAllSystems = forEachSystem systems.default;
 
   # get the `pkgs` for a system double
-  pkgsFor = system: import nixpkgs {inherit system;};
+  pkgsFor = system:
+    import nixpkgs {
+      inherit system;
+    };
 
   # iterate through a given list of `systems` and generate an attribute set with
   # the system names as its keys and the value set to the result of `f <pkgs for system>`
@@ -103,6 +106,8 @@
           nix = mkNixConfig user pkgs;
           home-manager = mkHomeManagerConfig user;
 
+          nixpkgs.overlays = [self.overlays.default];
+
           time.timeZone = nixpkgs.lib.mkDefault self.config.timeZone;
 
           users.users.${user} = {
@@ -140,6 +145,8 @@
 
           nix = mkNixConfig user pkgs;
           home-manager = mkHomeManagerConfig user;
+
+          nixpkgs.overlays = [self.overlays.default];
 
           users.users.${user}.shell = pkgs.zsh;
           # darwin requires global zsh for things to link up properly

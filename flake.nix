@@ -22,16 +22,20 @@
     ...
   } @ inputs: {
     config = import ./config.nix;
-    lib = import ./lib inputs;
+    lib = import ./lib.nix inputs;
 
     nixosModules.default.imports = [
-      ./modules/caretaker.nix
-      ./modules/docker.nix
-      ./modules/openssh.nix
-      ./modules/selfhosted.nix
+      ./nixos/caretaker.nix
+      ./nixos/docker.nix
+      ./nixos/openssh.nix
+      ./nixos/selfhosted.nix
+    ];
+
+    darwinModules.default.imports = [
     ];
 
     homeModules.default.imports = [
+      ./home/alacritty.nix
       ./home/firefox.nix
       ./home/helix.nix
       ./home/tmux.nix
@@ -59,13 +63,11 @@
       };
     };
 
-    packages = self.lib.forAllPkgs (pkgs: {
-      local-bin = pkgs.callPackage ./packages/local-bin {};
-    });
+    overlays.default = import ./overlay;
 
     devShells = self.lib.forAllPkgs (pkgs: {
       default = pkgs.mkShell {
-        packages = with pkgs; [niv alejandra gnumake];
+        packages = with pkgs; [nil alejandra gnumake];
       };
     });
 
