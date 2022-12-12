@@ -53,8 +53,9 @@
   # return `[path]` if `path` exists, else `[]`
   optionalPath = path: nixpkgs.lib.optional (builtins.pathExists path) path;
 
-  # generate nix defaults based on the user
-  mkNixConfig = user: {
+  # generate `config.nix`
+  mkNixConfig = user: pkgs: {
+    package = pkgs.nix;
     registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
       experimental-features = "nix-command flakes";
@@ -64,7 +65,7 @@
     };
   };
 
-  # generate home-manager defaults based on user user
+  # generate `config.home-manager`
   mkHomeManagerConfig = user:
     with nixpkgs.lib; {
       useGlobalPkgs = mkDefault true;
@@ -74,7 +75,7 @@
       };
       users.${user} = {
         home.stateVersion = "22.11";
-        imports = [self.homeManagerModules.default];
+        imports = [self.homeModules.default];
       };
     };
 
@@ -99,10 +100,8 @@
         ({pkgs, ...}: {
           networking.hostName = hostname;
 
-          nix = mkNixConfig user;
+          nix = mkNixConfig user pkgs;
           home-manager = mkHomeManagerConfig user;
-
-          nixpkgs.config.allowUnfree = self.config.allowUnfree;
 
           time.timeZone = nixpkgs.lib.mkDefault self.config.timeZone;
 
@@ -135,20 +134,17 @@
       };
       modules = [
         config
-        self.darwinModules.default
         inputs.home-manager.darwinModules.home-manager
         ({pkgs, ...}: {
           networking.hostName = hostname;
 
-          nix = mkNixConfig user;
+          nix = mkNixConfig user pkgs;
           home-manager = mkHomeManagerConfig user;
 
           users.users.${user}.shell = pkgs.zsh;
           # darwin requires global zsh for things to link up properly
           programs.zsh.enable = true;
           environment.pathsToLink = ["/share/zsh"];
-
-          nixpkgs.config.allowUnfree = self.config.allowUnfree;
 
           services.nix-daemon.enable = true;
 

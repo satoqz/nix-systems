@@ -12,6 +12,11 @@
     cp = "cp -v";
     rm = "rm -v";
     mv = "mv -v";
+    nr = "nix run";
+    nb = "nix build";
+    nf = "nix flake";
+    ns = "nix shell";
+    np = "nix profile";
   };
 
   programs.starship = {

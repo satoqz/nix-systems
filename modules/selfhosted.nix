@@ -80,7 +80,6 @@
             static_use_hash = true;
             infinite_scroll = true;
             center_alignment = true;
-            results_on_new_tab = true;
             query_in_title = true;
           };
           search = {

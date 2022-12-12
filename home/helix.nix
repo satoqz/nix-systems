@@ -6,15 +6,23 @@
   programs.helix.enable = lib.mkDefault true;
 
   programs.helix.settings = {
-    theme = "ayu_light";
+    theme = "dark_plus_patched";
     editor = {
       true-color = true;
       cursorline = true;
-      color-modes = true;
-      bufferline = "multiple";
+      color-modes = false;
+      bufferline = "always";
       cursor-shape.insert = "bar";
       indent-guides.render = true;
     };
+  };
+
+  programs.helix.themes.dark_plus_patched = {
+    inherits = "dark_plus";
+    "ui.statusline".bg = "dark_gray3";
+    "ui.statusline.inactive".bg = "dark_gray3";
+    "ui.bufferline".bg = "background";
+    "ui.bufferline.active".bg = "dark_gray4";
   };
 
   # default values: https://github.com/helix-editor/helix/blob/master/languages.toml

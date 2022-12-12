@@ -3,6 +3,8 @@
   user,
   ...
 }: {
+  nixpkgs.config.allowUnfree = true;
+
   home-manager.users.${user} = {
     programs = {
       firefox.enable = true;
@@ -15,7 +17,6 @@
       slack
       teams
       iterm2
-      utm
       rectangle
     ];
   };

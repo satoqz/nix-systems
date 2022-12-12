@@ -9,14 +9,11 @@ stdenvNoCC.mkDerivation {
 
   src = ./bin;
 
-  nativeBuildInputs = [makeWrapper];
-
   buildPhase = ''
     patchShebangs *
   '';
 
   installPhase = ''
     install -Dm755 -t $out/bin *
-    wrapProgram $out/bin/use --set FLAKE_URL ${config.flakeUrl}
   '';
 }

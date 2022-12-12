@@ -24,28 +24,22 @@
     config = import ./config.nix;
     lib = import ./lib inputs;
 
-    nixosModules.default = {
-      imports = [
-        ./modules/caretaker.nix
-        ./modules/docker.nix
-        ./modules/openssh.nix
-        ./modules/selfhosted.nix
-      ];
-    };
+    nixosModules.default.imports = [
+      ./modules/caretaker.nix
+      ./modules/docker.nix
+      ./modules/openssh.nix
+      ./modules/selfhosted.nix
+    ];
 
-    darwinModules.default = {};
-
-    homeManagerModules.default = {
-      imports = [
-        ./home/shell/zsh.nix
-        ./home/shell/tmux.nix
-        ./home/shell/helix.nix
-        ./home/shell/tools.nix
-        ./home/desktop/firefox.nix
-        ./home/desktop/sioyek.nix
-        ./home/desktop/vscode.nix
-      ];
-    };
+    homeModules.default.imports = [
+      ./home/firefox.nix
+      ./home/helix.nix
+      ./home/tmux.nix
+      ./home/tools.nix
+      ./home/sioyek.nix
+      ./home/vscode.nix
+      ./home/zsh.nix
+    ];
 
     nixosConfigurations = {
       moghlai = self.lib.nixosSystem {
@@ -53,13 +47,6 @@
         hostname = "moghlai";
         user = "satoqz";
         config = import ./systems/moghlai.nix;
-      };
-
-      tandoori = self.lib.nixosSystem {
-        arch = "aarch64";
-        hostname = "tandoori";
-        user = "satoqz";
-        config = import ./systems/tandoori.nix;
       };
     };
 
@@ -72,22 +59,15 @@
       };
     };
 
-    homeManagerConfigurations = self.lib.forEachSystem (system:
-      home-manager.lib.homeManagerConfiguration {
-        pkgs = self.lib.pkgsFor system;
-        imports = [self.homeManagerModules.default];
-        extraSpecialArgs = {
-          inherit self inputs;
-        };
-      });
-
     packages = self.lib.forAllPkgs (pkgs: {
-      local-bin = pkgs.callPackage ./packages/local-bin {
-        inherit (self) config;
-      };
+      local-bin = pkgs.callPackage ./packages/local-bin {};
     });
 
-    devShells = self.lib.forAllPkgs (pkgs: import ./shells pkgs);
+    devShells = self.lib.forAllPkgs (pkgs: {
+      default = pkgs.mkShell {
+        packages = with pkgs; [niv alejandra gnumake];
+      };
+    });
 
     formatter = self.lib.forAllPkgs (pkgs: pkgs.alejandra);
   };

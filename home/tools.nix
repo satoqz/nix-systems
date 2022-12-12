@@ -30,6 +30,15 @@
   programs.zsh.shellAliases = {
     htop = "htop -C";
     top = "htop -C";
+
+    ga = "git add";
+    gc = "git commit";
+    gpl = "git pull";
+    gps = "git push";
+    gl = "git log";
+    gr = "git reset";
+    gd = "git diff";
+    gds = "git diff --staged";
   };
 
   programs.git = {
