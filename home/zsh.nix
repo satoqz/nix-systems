@@ -26,19 +26,19 @@
 
   programs.starship.settings = {
     add_newline = false;
-    format = "$username[@](white)$hostname$nix_shell ";
+    format = "$username@$hostname$nix_shell ";
     right_format = "$git_status$directory$git_branch";
     username = {
       show_always = true;
-      format = "[$user](gray)";
+      format = "[$user](black)";
     };
     hostname = {
       ssh_only = false;
-      format = "[$hostname](gray)";
+      format = "[$hostname](black)";
     };
-    directory.format = "[$path](gray)";
-    git_status.format = " ([<](gray)[$ahead_behind$all_status](white)[>](gray)) ";
-    git_branch.format = " [# $branch(:$remote_branch)](white)";
-    nix_shell.format = " [<](gray)[nix](white)[>](gray)";
+    directory.format = "[$path](green)";
+    git_status.format = " ([<](black)[$ahead_behind$all_status]($style)[>](black)) ";
+    git_branch.format = " [# $branch(:$remote_branch)](black)";
+    nix_shell.format = " [<](black)[nix]($style)[>](black)";
   };
 }
