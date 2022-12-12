@@ -18,17 +18,17 @@
 
       set -g mouse on
 
-      set -g pane-active-border-style fg=black
-      set -g pane-border-style fg=black
+      set -g pane-active-border-style fg=white
+      set -g pane-border-style fg=white
 
       set -g status-style default
       set -g status-position bottom
 
       set -g status-left ""
-      set -g status-right "#[fg=gray]#H #[fg=gray][#[fg=brightred]#S#[fg=black]]"
+      set -g status-right "#[fg=white]#H [#[fg=brightred]#S#[fg=white]]"
 
-      setw -g window-status-current-format "#[fg=black][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
-      setw -g window-status-format "#[fg=black]#[fg=gray][#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
+      setw -g window-status-current-format "#[fg=white][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=white]] "
+      setw -g window-status-format "#[fg=white][#[fg=gray]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=white]] "
     '';
   };
 

@@ -28,7 +28,8 @@
   };
 
   programs.zsh.shellAliases = {
-    top = "htop";
+    htop = "htop -C";
+    top = "htop -C";
   };
 
   programs.git = {

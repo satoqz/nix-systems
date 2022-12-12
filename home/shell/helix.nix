@@ -6,7 +6,7 @@
   programs.helix.enable = lib.mkDefault true;
 
   programs.helix.settings = {
-    theme = "gruvbox";
+    theme = "ayu_light";
     editor = {
       true-color = true;
       cursorline = true;
