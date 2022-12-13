@@ -7,6 +7,7 @@
 
   programs.vscode.extensions = with pkgs.vscode-extensions; [
     vscodevim.vim
+    file-icons.file-icons
     usernamehw.errorlens
     eamodio.gitlens
     mkhl.direnv
@@ -46,6 +47,7 @@
 
     workbench = {
       startupEditor = "none";
+      iconTheme = "file-icons";
     };
 
     git = {
