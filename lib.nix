@@ -59,7 +59,17 @@
   # create desktop app dummies for darwin
   mkDummy = pkgs: name:
     if pkgs.stdenv.isDarwin
-    then pkgs.runCommand "${name}-dummy" {} "mkdir $out"
+    then
+      pkgs.stdenvNoCC.mkDerivation {
+        inherit name;
+        pname = name;
+
+        phases = ["installPhase"];
+
+        installPhase = ''
+          mkdir $out;
+        '';
+      }
     else pkgs.${name};
 
   # generate `config.nix`
