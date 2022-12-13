@@ -73,5 +73,10 @@
     });
 
     formatter = self.lib.forAllPkgs (pkgs: pkgs.alejandra);
+
+    templates.default = {
+      path = ./template;
+      description = "nix flake init -t ${self.config.flakeUrl}";
+    };
   };
 }
