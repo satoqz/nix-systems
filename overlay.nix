@@ -1,13 +1,14 @@
-final: prev: {
+final: prev:
+with prev; {
   firefox =
-    if prev.stdenv.isDarwin
-    then prev.runCommand "firefox-dummy" {} "mkdir $out"
-    else prev.firefox;
+    if stdenv.isDarwin
+    then runCommand "firefox-dummy" {} "mkdir $out"
+    else firefox;
 
-  alacritty-mac-icon = prev.stdenv.mkDerivation {
+  alacritty-mac-icon = stdenvNoCC.mkDerivation {
     name = "alacritty-mac-icon";
 
-    src = ./alacritty.icns;
+    src = ./res/alacritty.icns;
 
     unpackPhase = ''
       cp $src $(stripHash $src)
@@ -19,19 +20,18 @@ final: prev: {
     '';
   };
 
-  alacritty = prev.alacritty.overrideAttrs (_: prevAttrs: {
+  alacritty = alacritty.overrideAttrs (_: prevAttrs: {
     postInstall =
       prevAttrs.postInstall
-      + prev.lib.optionalString prev.stdenv.isDarwin ''
+      + lib.optionalString stdenv.isDarwin ''
         cp ${final.alacritty-mac-icon}/alacritty.icns $out/Applications/Alacritty.app/Contents/Resources
       '';
   });
 
-  local-bin = prev.stdenv.mkDerivation {
+  local-bin = stdenvNoCC.mkDerivation {
     name = "local-bin";
-    version = "main";
 
-    src = ./bin;
+    src = ./res/bin;
 
     buildPhase = ''
       patchShebangs *

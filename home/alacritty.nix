@@ -3,14 +3,16 @@
   programs.alacritty.settings = {
     live_config_reload = true;
     selection.save_to_clipboard = true;
-    mouse.hide_when_typing = true;
     cursor.style.shape = "Beam";
 
     window = {
       title = "";
-      decorations = "buttonless";
       dynamic_padding = true;
-      padading = {
+      dimensions = {
+        columns = 160;
+        lines = 50;
+      };
+      padding = {
         x = 4;
         y = 4;
       };

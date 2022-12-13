@@ -63,7 +63,7 @@
       };
     };
 
-    overlays.default = import ./overlay;
+    overlays.default = import ./overlay.nix;
 
     devShells = self.lib.forAllPkgs (pkgs: {
       default = pkgs.mkShell {
