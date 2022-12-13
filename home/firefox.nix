@@ -1,3 +1,7 @@
-{pkgs, ...}: {
-  programs.firefox.package = pkgs.firefox;
+{
+  self,
+  pkgs,
+  ...
+}: {
+  programs.firefox.package = self.lib.mkDummy pkgs "firefox";
 }

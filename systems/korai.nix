@@ -3,21 +3,30 @@
   user,
   ...
 }: {
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
 
-  home-manager.users.${user} = {
-    programs = {
-      alacritty.enable = true;
-      firefox.enable = true;
-      vscode.enable = true;
-      sioyek.enable = true;
-    };
+  homebrew.enable = true;
 
-    home.packages = with pkgs; [
-      discord
-      slack
-      teams
-      rectangle
-    ];
+  homebrew.casks = [
+    "firefox"
+    "iterm2"
+    "visual-studio-code"
+    "sioyek"
+    "rectangle"
+    "discord"
+    "slack"
+    "microsoft-teams"
+    "microsoft-remote-desktop"
+    "microsoft-outlook"
+    "microsoft-powerpoint"
+    "microsoft-excel"
+    "microsoft-word"
+    "pingid"
+  ];
+
+  home-manager.users.${user}.programs = {
+    firefox.enable = true;
+    vscode.enable = true;
+    sioyek.enable = true;
   };
 }

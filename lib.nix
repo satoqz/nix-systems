@@ -56,6 +56,12 @@
   # return `[path]` if `path` exists, else `[]`
   optionalPath = path: nixpkgs.lib.optional (builtins.pathExists path) path;
 
+  # create desktop app dummies for darwin
+  mkDummy = pkgs: name:
+    if pkgs.stdenv.isDarwin
+    then pkgs.runCommand "${name}-dummy" {} "mkdir $out"
+    else pkgs.${name};
+
   # generate `config.nix`
   mkNixConfig = user: pkgs: {
     package = pkgs.nix;
@@ -139,6 +145,7 @@
       };
       modules = [
         config
+        self.darwinModules.default
         inputs.home-manager.darwinModules.home-manager
         ({pkgs, ...}: {
           networking.hostName = hostname;

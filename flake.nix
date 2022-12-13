@@ -32,6 +32,7 @@
     ];
 
     darwinModules.default.imports = [
+      ./darwin/homebrew.nix
     ];
 
     homeModules.default.imports = [
@@ -63,7 +64,7 @@
       };
     };
 
-    overlays.default = import ./overlay.nix;
+    overlays.default = import ./overlay.nix inputs;
 
     devShells = self.lib.forAllPkgs (pkgs: {
       default = pkgs.mkShell {
