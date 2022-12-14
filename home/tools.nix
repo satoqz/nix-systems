@@ -2,6 +2,7 @@
   self,
   pkgs,
   lib,
+  config,
   ...
 }: {
   home.packages = with pkgs;
@@ -46,7 +47,12 @@
     userEmail = self.config.git.email;
     userName = self.config.git.user;
     extraConfig.init.defaultBranch = "main";
+    extraConfig.core.excludesfile = "${config.home.homeDirectory}/.config/git/ignore";
   };
+
+  home.file.".config/git/ignore".text = ''
+    .DS_Store
+  '';
 
   programs.gh = {
     enable = true;
