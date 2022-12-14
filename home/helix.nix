@@ -40,13 +40,37 @@
   };
 
   # default values: https://github.com/helix-editor/helix/blob/master/languages.toml
-  programs.helix.languages = [
-    {
-      name = "nix";
-      formatter.command = "alejandra";
-      auto-format = true;
-    }
-  ];
+  programs.helix.languages =
+    [
+      {
+        name = "nix";
+        formatter.command = "alejandra";
+        auto-format = true;
+      }
+    ]
+    ++ lib.mapAttrsToList (name: value: {
+      inherit name;
+
+      shebangs = ["deno"];
+      roots = ["deno.json" "deno.jsonc" "tsconfig.json"];
+
+      config = {
+        enable = true;
+        lint = true;
+        unstable = true;
+      };
+
+      language-server = {
+        command = "deno";
+        args = ["lsp"];
+        language-id = value;
+      };
+    }) {
+      typescript = "typescript";
+      javascript = "javascript";
+      tsx = "typescriptreact";
+      jsx = "javascriptreact";
+    };
 
   home.sessionVariables = lib.mkIf config.programs.helix.enable {
     EDITOR = "hx";
