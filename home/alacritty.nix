@@ -27,17 +27,17 @@
 
       bold = {
         family = "JetBrainsMono Nerd Font";
-        style = "Regular";
+        style = "Bold";
       };
 
       italic = {
         family = "JetBrainsMono Nerd Font";
-        style = "Regular";
+        style = "Italic";
       };
 
       bold_italic = {
         family = "JetBrainsMono Nerd Font";
-        style = "Regular";
+        style = "Bold Italic";
       };
     };
 
