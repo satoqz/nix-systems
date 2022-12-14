@@ -52,10 +52,4 @@
     EDITOR = "hx";
     VISUAL = "hx";
   };
-
-  programs.zsh.shellAliases = lib.mkIf config.programs.helix.enable {
-    vi = "hx";
-    vim = "hx";
-    nvim = "hx";
-  };
 }
