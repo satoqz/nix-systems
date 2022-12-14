@@ -51,6 +51,8 @@
     ++ lib.mapAttrsToList (name: value: {
       inherit name;
 
+      auto-format = true;
+
       shebangs = ["deno"];
       roots = ["deno.json" "deno.jsonc" "tsconfig.json"];
 
