@@ -1,5 +1,6 @@
 {
   self,
+  inputs,
   pkgs,
   lib,
   config,
@@ -7,6 +8,7 @@
 }: {
   home.packages = with pkgs;
     [
+      inputs.niks.packages.${pkgs.system}.default
       local-bin
       cachix
       coreutils
