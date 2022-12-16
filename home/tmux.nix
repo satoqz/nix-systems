@@ -33,10 +33,10 @@
         setw -g window-status-format "#[fg=brightblack][#[fg=white]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=brightblack]] "
       ''
       + lib.optionalString pkgs.stdenv.isDarwin ''
-        unbind -T copy-mode-vi MouseDragEnd1Pane
-        bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel\; run "tmux save-buffer - | pbcopy"
-        unbind -T copy-mode-vi Enter
-        bind -T copy-mode-vi Enter send -X copy-selection-and-cancel\; run "tmux save-buffer - | pbcopy"
+        # unbind -T copy-mode-vi MouseDragEnd1Pane
+        # bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel\; run "tmux save-buffer - | pbcopy"
+        # unbind -T copy-mode-vi Enter
+        # bind -T copy-mode-vi Enter send -X copy-selection-and-cancel\; run "tmux save-buffer - | pbcopy"
       ''
       + lib.optionalString pkgs.stdenv.isLinux ''
         set -s set-clipboard on
