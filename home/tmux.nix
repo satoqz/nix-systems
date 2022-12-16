@@ -20,17 +20,17 @@
 
         set -g mouse on
 
-        set -g pane-active-border-style fg=black
-        set -g pane-border-style fg=black
+        set -g pane-active-border-style fg=brightblack
+        set -g pane-border-style fg=brightblack
 
         set -g status-style default
         set -g status-position bottom
 
         set -g status-left ""
-        set -g status-right "#[fg=gray]#H #[fg=black][#[fg=brightred]#S#[fg=black]]"
+        set -g status-right "#[fg=white]#H #[fg=brightblack][#[fg=brightred]#S#[fg=brightblack]]"
 
-        setw -g window-status-current-format "#[fg=black][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
-        setw -g window-status-format "#[fg=black][#[fg=gray]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=black]] "
+        setw -g window-status-current-format "#[fg=brightblack][#[fg=brightgreen]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=brightblack]] "
+        setw -g window-status-format "#[fg=brightblack][#[fg=white]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=brightblack]] "
       ''
       + lib.optionalString pkgs.stdenv.isDarwin ''
         unbind -T copy-mode-vi MouseDragEnd1Pane
