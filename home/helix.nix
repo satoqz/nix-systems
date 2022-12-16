@@ -5,12 +5,17 @@
 }: {
   programs.helix.enable = lib.mkDefault true;
 
+  home.sessionVariables = lib.mkIf config.programs.helix.enable {
+    EDITOR = "hx";
+    VISUAL = "hx";
+  };
+
   programs.helix.settings = {
-    theme = "meliora";
+    theme = "gruvbox";
     editor = {
       true-color = true;
       cursorline = true;
-      color-modes = false;
+      color-modes = true;
       bufferline = "always";
       cursor-shape.insert = "bar";
       indent-guides.render = true;
@@ -18,21 +23,29 @@
   };
 
   # default values: https://github.com/helix-editor/helix/blob/master/languages.toml
-  programs.helix.languages =
-    [
-      {
-        name = "nix";
-        formatter.command = "alejandra";
-        auto-format = true;
-      }
-    ]
-    ++ lib.mapAttrsToList (name: value: {
+  programs.helix.languages = lib.mapAttrsToList (name: value:
+    value
+    // {
       inherit name;
-
+    }) rec {
+    nix = {
+      formatter.command = "alejandra";
       auto-format = true;
+    };
 
+    latex = {
+      rulers = [120];
+    };
+
+    typescript = {
       shebangs = ["deno"];
       roots = ["deno.json" "deno.jsonc" "tsconfig.json"];
+
+      language-server = {
+        command = "deno";
+        args = ["lsp"];
+        language-id = "typescript";
+      };
 
       config = {
         enable = true;
@@ -40,20 +53,37 @@
         unstable = true;
       };
 
-      language-server = {
-        command = "deno";
-        args = ["lsp"];
-        language-id = value;
-      };
-    }) {
-      typescript = "typescript";
-      javascript = "javascript";
-      tsx = "typescriptreact";
-      jsx = "javascriptreact";
+      auto-format = true;
     };
 
-  home.sessionVariables = lib.mkIf config.programs.helix.enable {
-    EDITOR = "hx";
-    VISUAL = "hx";
+    javascript =
+      typescript
+      // {
+        language-server = {
+          command = "deno";
+          args = ["lsp"];
+          language-id = "javascript";
+        };
+      };
+
+    tsx =
+      typescript
+      // {
+        language-server = {
+          command = "deno";
+          args = ["lsp"];
+          language-id = "typescriptreact";
+        };
+      };
+
+    jsx =
+      typescript
+      // {
+        language-server = {
+          command = "deno";
+          args = ["lsp"];
+          language-id = "javascriptreact";
+        };
+      };
   };
 }
