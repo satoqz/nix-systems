@@ -1,10 +1,9 @@
-{self, ...}: final: prev:
-with prev; {
-  local-bin = stdenvNoCC.mkDerivation {
+{self, ...}: final: prev: {
+  local-bin = prev.stdenvNoCC.mkDerivation {
     name = "local-bin";
     src = ./res/bin;
 
-    nativeBuildInputs = [makeWrapper];
+    nativeBuildInputs = [prev.makeWrapper];
 
     buildPhase = ''
       patchShebangs *

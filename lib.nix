@@ -85,18 +85,17 @@
   };
 
   # generate `config.home-manager`
-  mkHomeManagerConfig = user:
-    with nixpkgs.lib; {
-      useGlobalPkgs = mkDefault true;
-      useUserPackages = mkDefault true;
-      extraSpecialArgs = {
-        inherit inputs self;
-      };
-      users.${user} = {
-        home.stateVersion = "22.11";
-        imports = [self.homeModules.default];
-      };
+  mkHomeManagerConfig = user: {
+    useGlobalPkgs = nixpkgs.lib.mkDefault true;
+    useUserPackages = nixpkgs.lib.mkDefault true;
+    extraSpecialArgs = {
+      inherit inputs self;
     };
+    users.${user} = {
+      home.stateVersion = "22.11";
+      imports = [self.homeModules.default];
+    };
+  };
 
   # `nixpkgs.lib.nixosSystem` wrapper
   nixosSystem = {
