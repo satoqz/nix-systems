@@ -14,6 +14,10 @@
     mv = "mv -v";
   };
 
+  programs.zsh.initExtra = ''
+    ZLE_RPROMPT_INDENT=0
+  '';
+
   programs.starship = {
     enable = lib.mkDefault true;
     enableZshIntegration = true;
@@ -24,14 +28,13 @@
 
     format = "$hostname$directory$nix_shell[λ ](white)";
 
-    hostname.format = "[\\($hostname\\) ](bright-black)";
-    directory.format = "[$path ](bold white)";
-    nix_shell.format = "['](bold blue)";
+    hostname.format = "([\\(](bright-black)[host](yellow) [$hostname](white)[\\)](bright-black) )";
+    directory.format = "([\\(](bright-black)[dir](green) [$path](white)[\\)](bright-black) )";
+    nix_shell.format = "([\\(](bright-black)[*](blue)[\\)](bright-black) )";
 
-    right_format = "$git_metrics$git_status$git_branch";
+    right_format = "$git_status$git_branch";
 
-    git_metrics.disabled = false;
-    git_status.format = "[$ahead_behind$all_status ](bright-black)";
-    git_branch.format = "[$branch](bold white)";
+    git_status.format = "([\\(](bright-black)[$ahead_behind$all_status](red)[\\)](bright-black) )";
+    git_branch.format = "([\\(](bright-black)[branch](cyan) [$branch](white)[\\)](bright-black))";
   };
 }
