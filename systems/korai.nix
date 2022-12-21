@@ -10,6 +10,7 @@
   homebrew.casks = [
     "firefox"
     "iterm2"
+    "utm"
     "visual-studio-code"
     "sioyek"
     "rectangle"

@@ -184,6 +184,38 @@
       ];
     };
 
+  # `home-manager.lib.homeManagerConfiguration` wrapper
+  homeManagerConfiguration = {
+    user,
+    system,
+    config ? {},
+    ...
+  }:
+    home-manager.lib.homeManagerConfiguration {
+      inherit user;
+
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [self.overlays.default];
+      };
+
+      extraSpecialArgs = {
+        inherit inputs self;
+      };
+
+      modules = [
+        config
+        self.homeModules.default
+        ({lib, ...}: {
+          home = {
+            inherit user;
+            homeDirectory = "${lib.optionalString user != "root" "/home"}/${user}";
+            stateVersion = "22.11";
+          };
+        })
+      ];
+    };
+
   # utility variable that summarizes all system outputs under a uniform path (useful for automation)
   top = mergeAttrs [
     (nixpkgs.lib.genAttrs

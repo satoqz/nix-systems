@@ -28,7 +28,7 @@
 
     format = "$hostname$directory$nix_shell[λ ](white)";
 
-    hostname.format = "([\\(](bright-black)[host](yellow) [$hostname](white)[\\)](bright-black) )";
+    hostname.format = "([\\(](bright-black)[host](cyan) [$hostname](white)[\\)](bright-black) )";
     directory.format = "([\\(](bright-black)[dir](green) [$path](white)[\\)](bright-black) )";
     nix_shell.format = "[\\(](bright-black)[\\$](blue)[\\)](bright-black) ";
 
