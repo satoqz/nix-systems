@@ -76,9 +76,22 @@
 
     formatter = self.lib.forAllPkgs (pkgs: pkgs.alejandra);
 
-    templates.default = {
-      path = ./template;
-      description = "nix flake init -t ${self.config.flakeUrl}";
+    templates = rec {
+      basic = {
+        path = ./templates/basic;
+        description = "nix flake init -t ${self.config.flakeUrl}#basic";
+      };
+
+      default =
+        basic
+        // {
+          description = "nix flake init -t ${self.config.flakeUrl}";
+        };
+
+      home = {
+        path = ./templates/home;
+        description = "nix flake init -t ${self.config.flakeUrl}#home";
+      };
     };
   };
 }
