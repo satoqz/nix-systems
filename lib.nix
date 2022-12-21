@@ -192,8 +192,6 @@
     ...
   }:
     home-manager.lib.homeManagerConfiguration {
-      inherit user;
-
       pkgs = import nixpkgs {
         inherit system;
         overlays = [self.overlays.default];
