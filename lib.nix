@@ -204,11 +204,20 @@
       modules = [
         config
         self.homeModules.default
-        ({lib, ...}: {
+        ({
+          pkgs,
+          lib,
+          ...
+        }: {
           home = {
-            username = user;
-            homeDirectory = "${lib.optionalString user != "root" "/home"}/${user}";
             stateVersion = "22.11";
+            username = user;
+            homeDirectory =
+              if user == "root"
+              then "/root"
+              else if pkgs.stdenv.isDarwin
+              then "/Users/${user}"
+              else "/home/${user}";
           };
         })
       ];
