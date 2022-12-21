@@ -206,7 +206,7 @@
         self.homeModules.default
         ({lib, ...}: {
           home = {
-            inherit user;
+            username = user;
             homeDirectory = "${lib.optionalString user != "root" "/home"}/${user}";
             stateVersion = "22.11";
           };
