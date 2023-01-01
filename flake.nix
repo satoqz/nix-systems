@@ -39,7 +39,6 @@
 
     homeModules.default.imports = [
       ./home/alacritty.nix
-      ./home/firefox.nix
       ./home/helix.nix
       ./home/tmux.nix
       ./home/tools.nix

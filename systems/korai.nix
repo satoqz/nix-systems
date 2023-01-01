@@ -8,7 +8,7 @@
   homebrew.enable = true;
 
   homebrew.casks = [
-    "firefox"
+    "eloston-chromium"
     "iterm2"
     "utm"
     "visual-studio-code"
@@ -26,7 +26,6 @@
   ];
 
   home-manager.users.${user}.programs = {
-    firefox.enable = true;
     vscode.enable = true;
     sioyek.enable = true;
   };

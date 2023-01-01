@@ -8,10 +8,13 @@
       cleanup = "zap";
       autoUpdate = true;
     };
+
     taps = [
       "homebrew/core"
       "homebrew/cask"
     ];
+
+    caskArgs.no_quarantine = true;
   };
 
   environment.extraInit =
