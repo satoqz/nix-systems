@@ -28,13 +28,13 @@
 
     format = "$hostname$directory$nix_shell[λ ](white)";
 
-    hostname.format = "([\\(](bright-black)[host](cyan) [$hostname](white)[\\)](bright-black) )";
-    directory.format = "([\\(](bright-black)[$path](white)[\\)](bright-black) )";
-    nix_shell.format = "[\\(](bright-black)[\\$](blue)[\\)](bright-black) ";
+    hostname.format = "([$hostname](bright-black) )";
+    directory.format = "([$path](white) )";
+    nix_shell.format = "[*](blue) ";
 
     right_format = "$git_status$git_branch";
 
-    git_status.format = "([\\(](bright-black)[$ahead_behind$all_status](red)[\\)](bright-black) )";
-    git_branch.format = "([\\(](bright-black)[branch](cyan) [$branch](white)[\\)](bright-black))";
+    git_status.format = "([$ahead_behind$all_status](red) )";
+    git_branch.format = "([$branch](white) )";
   };
 }

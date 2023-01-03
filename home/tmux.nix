@@ -26,10 +26,10 @@
       set -g status-position bottom
 
       set -g status-left ""
-      set -g status-right "#[fg=brightblack](#[fg=brightblue]session #[fg=white]#S#[fg=brightblack]) #[fg=brightblack](#[fg=brightblue]time #[fg=white]#( date +'%H:%M' )#[fg=brightblack])"
+      set -g status-right "#[fg=brightblack]#S"
 
-      setw -g window-status-current-format "#[fg=brightblack](#[fg=green]#I #[fg=white]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=brightblack])"
-      setw -g window-status-format "#[fg=brightblack](#[fg=brightblue]#I #[fg=white]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )#[fg=brightblack])"
+      setw -g window-status-current-format "#[fg=green]#I#[fg=brightblack]:#[fg=white]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )"
+      setw -g window-status-format "#[fg=white]#I#[fg=brightblack]:#[fg=white]#( echo '#W' | sed -E 's/\\.(.*)-wrapped/\\1/' )"
     '';
   };
 
