@@ -14,17 +14,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     vscode-server.url = "github:msteen/nixos-vscode-server";
 
     niks.url = "github:satoqz/niks";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: {
+  outputs = {self, ...} @ inputs: {
     config = import ./config.nix;
     lib = import ./lib.nix inputs;
 
@@ -81,7 +78,7 @@
   };
 
   nixConfig = {
-    extra-substitutors = ["https://systems.cachix.org"];
+    extra-substituters = ["https://systems.cachix.org"];
     extra-trusted-public-keys = ["systems.cachix.org-1:w+BPDlm25/PkSE0uN9uV6u12PNmSsBuR/HW6R/djZIc="];
   };
 }
