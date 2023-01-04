@@ -54,6 +54,13 @@
         user = "satoqz";
         config = import ./systems/moghlai.nix;
       };
+
+      pakora = self.lib.nixosSystem {
+        arch = "aarch64";
+        hostname = "pakora";
+        user = "satoqz";
+        config = import ./systems/pakora.nix;
+      };
     };
 
     darwinConfigurations = {
