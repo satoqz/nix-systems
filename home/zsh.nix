@@ -35,6 +35,6 @@
     right_format = "$git_status$git_branch";
 
     git_status.format = "([$ahead_behind$all_status](red) )";
-    git_branch.format = "([$branch](white) )";
+    git_branch.format = "[$branch](white)";
   };
 }
