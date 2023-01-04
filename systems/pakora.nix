@@ -1,8 +1,11 @@
 {
+  inputs,
   user,
   pkgs,
   ...
 }: {
+  imports = [inputs.vscode-server.nixosModules.default];
+
   home-manager.users.${user} = {
     programs.go.enable = true;
 
@@ -19,14 +22,17 @@
     ];
   };
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   services.openssh.enable = true;
+  services.vscode-server.enable = true;
 
   networking = {
     useDHCP = true;
     firewall.enable = false;
+  };
+
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
   };
 
   boot.initrd.availableKernelModules = ["virtio_pci" "xhci_pci" "usb_storage"];
