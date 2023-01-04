@@ -15,6 +15,7 @@
 
     home.packages = with pkgs; [
       gopls
+      delve
       go-tools
       gnumake
       gcc
