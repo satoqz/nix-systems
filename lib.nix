@@ -73,15 +73,10 @@
     else pkgs.${name};
 
   # generate `config.nix`
-  mkNixConfig = user: pkgs: {
+  mkNixConfig = pkgs: {
     package = pkgs.nix;
     registry.nixpkgs.flake = inputs.nixpkgs;
-    settings = {
-      experimental-features = "nix-command flakes";
-      trusted-users = ["root" user];
-      extra-substituters = map (it: it.url) self.config.substituters;
-      extra-trusted-public-keys = map (it: it.publicKey) self.config.substituters;
-    };
+    settings.experimental-features = "nix-command flakes";
   };
 
   # generate `config.home-manager`
@@ -118,7 +113,7 @@
         ({pkgs, ...}: {
           networking.hostName = hostname;
 
-          nix = mkNixConfig user pkgs;
+          nix = mkNixConfig pkgs;
           home-manager = mkHomeManagerConfig user;
 
           time.timeZone = nixpkgs.lib.mkDefault self.config.timeZone;
@@ -161,7 +156,7 @@
         ({pkgs, ...}: {
           networking.hostName = hostname;
 
-          nix = mkNixConfig user pkgs;
+          nix = mkNixConfig pkgs;
           home-manager = mkHomeManagerConfig user;
 
           users.users.${user} = {

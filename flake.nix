@@ -96,5 +96,11 @@
         description = "nix flake init -t ${self.config.flakeUrl}#home";
       };
     };
+    self = self;
+  };
+
+  nixConfig = {
+    extra-substitutors = ["https://systems.cachix.org"];
+    extra-trusted-public-keys = ["systems.cachix.org-1:w+BPDlm25/PkSE0uN9uV6u12PNmSsBuR/HW6R/djZIc="];
   };
 }
