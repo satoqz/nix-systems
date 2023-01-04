@@ -78,25 +78,6 @@
     });
 
     formatter = self.lib.forAllPkgs (pkgs: pkgs.alejandra);
-
-    templates = rec {
-      shell = {
-        path = ./templates/shell;
-        description = "nix flake init -t ${self.config.flakeUrl}#shell";
-      };
-
-      default =
-        shell
-        // {
-          description = "nix flake init -t ${self.config.flakeUrl}";
-        };
-
-      home = {
-        path = ./templates/home;
-        description = "nix flake init -t ${self.config.flakeUrl}#home";
-      };
-    };
-    self = self;
   };
 
   nixConfig = {
