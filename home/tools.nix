@@ -16,8 +16,8 @@
       wget
       htop
       neofetch
-      gitui
       ripgrep
+      lsd
       jq
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin [
@@ -32,6 +32,8 @@
 
   programs.zsh.shellAliases = {
     top = "htop";
+    ls = "lsd --icon never --almost-all";
+    ll = "ls -l";
   };
 
   programs.git = {
@@ -53,11 +55,6 @@
       git_protocol = "https";
       prompt = "enabled";
     };
-  };
-
-  programs.lsd = {
-    enable = true;
-    enableAliases = true;
   };
 
   programs.fzf = {

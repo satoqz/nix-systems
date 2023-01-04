@@ -11,7 +11,7 @@
   };
 
   programs.helix.settings = {
-    theme = "dark_plus";
+    theme = "onedark";
     editor = {
       true-color = true;
       cursorline = true;
@@ -19,31 +19,6 @@
       bufferline = "multiple";
       cursor-shape.insert = "bar";
       indent-guides.render = true;
-    };
-  };
-
-  programs.helix.themes.dark_plus = {
-    inherits = "dark_plus";
-
-    "ui.statusline".bg = "background";
-    "ui.statusline.inactive".bg = "background";
-
-    "ui.statusline.insert" = {
-      bg = "background";
-      fg = "light_blue";
-    };
-
-    "ui.statusline.select" = {
-      bg = "background";
-      fg = "special";
-    };
-
-    "ui.bufferline".bg = "background";
-    "ui.bufferline.background".bg = "background";
-
-    "ui.bufferline.active" = {
-      bg = "background";
-      fg = "light_blue";
     };
   };
 

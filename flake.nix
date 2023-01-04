@@ -38,12 +38,9 @@
     ];
 
     homeModules.default.imports = [
-      ./home/alacritty.nix
       ./home/helix.nix
       ./home/tmux.nix
       ./home/tools.nix
-      ./home/sioyek.nix
-      ./home/vscode.nix
       ./home/zsh.nix
     ];
 
