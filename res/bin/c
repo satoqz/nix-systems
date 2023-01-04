@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-
-tmp=$(mktemp)
-
-cc -Wall -Wextra -O3 -o $tmp $@ \
-&& $tmp
-
-rm -f $tmp

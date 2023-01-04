@@ -121,8 +121,6 @@
           nix = mkNixConfig user pkgs;
           home-manager = mkHomeManagerConfig user;
 
-          nixpkgs.overlays = [self.overlays.default];
-
           time.timeZone = nixpkgs.lib.mkDefault self.config.timeZone;
 
           users.users.${user} = {
@@ -166,8 +164,6 @@
           nix = mkNixConfig user pkgs;
           home-manager = mkHomeManagerConfig user;
 
-          nixpkgs.overlays = [self.overlays.default];
-
           users.users.${user} = {
             shell = pkgs.zsh;
             home = "/Users/${user}";
@@ -194,7 +190,6 @@
     home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [self.overlays.default];
       };
 
       extraSpecialArgs = {

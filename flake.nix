@@ -14,10 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    vscode-server = {
-      url = "github:msteen/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    vscode-server.url = "github:msteen/nixos-vscode-server";
 
     niks.url = "github:satoqz/niks";
   };
@@ -74,8 +71,6 @@
       };
     };
 
-    overlays.default = import ./overlay.nix inputs;
-
     devShells = self.lib.forAllPkgs (pkgs: {
       default = pkgs.mkShell {
         packages = with pkgs; [nil alejandra gnumake];
@@ -85,13 +80,13 @@
     formatter = self.lib.forAllPkgs (pkgs: pkgs.alejandra);
 
     templates = rec {
-      basic = {
-        path = ./templates/basic;
-        description = "nix flake init -t ${self.config.flakeUrl}#basic";
+      shell = {
+        path = ./templates/shell;
+        description = "nix flake init -t ${self.config.flakeUrl}#shell";
       };
 
       default =
-        basic
+        shell
         // {
           description = "nix flake init -t ${self.config.flakeUrl}";
         };

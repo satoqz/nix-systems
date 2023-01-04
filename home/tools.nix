@@ -9,8 +9,6 @@
   home.packages = with pkgs;
     [
       inputs.niks.packages.${pkgs.system}.default
-      local-bin
-      cachix
       coreutils
       curl
       wget
@@ -18,7 +16,6 @@
       neofetch
       ripgrep
       lsd
-      jq
     ]
     ++ lib.optionals pkgs.stdenv.isDarwin [
       docker-client
