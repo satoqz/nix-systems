@@ -14,8 +14,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
-
     vscode-server.url = "github:msteen/nixos-vscode-server";
 
     niks.url = "github:satoqz/niks";

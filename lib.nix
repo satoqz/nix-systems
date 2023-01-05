@@ -56,22 +56,6 @@
   # return `[path]` if `path` exists, else `[]`
   optionalPath = path: nixpkgs.lib.optional (builtins.pathExists path) path;
 
-  # create desktop app dummies for darwin
-  mkDummy = pkgs: name:
-    if pkgs.stdenv.isDarwin
-    then
-      pkgs.stdenvNoCC.mkDerivation {
-        inherit name;
-        pname = name;
-
-        phases = ["installPhase"];
-
-        installPhase = ''
-          mkdir $out;
-        '';
-      }
-    else pkgs.${name};
-
   # generate `config.nix`
   mkNixConfig = pkgs: {
     package = pkgs.nix;
