@@ -38,7 +38,7 @@
     userEmail = "satoqz@pm.me";
     userName = "satoqz";
     extraConfig.init.defaultBranch = "main";
-    extraConfig.core.excludesfile = "${config.home.homeDirectory}/.config/git/ignore";
+    extraConfig.core.excludesfile = "~/.config/git/ignore";
   };
 
   home.file.".config/git/ignore".text = ''
