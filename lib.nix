@@ -109,10 +109,6 @@
             isNormalUser = true;
             extraGroups = ["wheel"];
             shell = pkgs.zsh;
-            home =
-              if user != "root"
-              then "/home/${user}"
-              else "/root";
           };
 
           security.sudo.wheelNeedsPassword = nixpkgs.lib.mkDefault false;
@@ -146,10 +142,7 @@
           nix = mkNixConfig pkgs;
           home-manager = mkHomeManagerConfig user;
 
-          users.users.${user} = {
-            shell = pkgs.zsh;
-            home = "/Users/${user}";
-          };
+          users.users.${user}.shell = pkgs.zsh;
 
           # darwin requires global zsh for things to link up properly
           programs.zsh.enable = true;
