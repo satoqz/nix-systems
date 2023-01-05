@@ -32,7 +32,7 @@
           "--entrypoints.websecure.address=:443"
           "--entrypoints.websecure.http3"
           "--experimental.http3=true"
-          "--certificatesresolvers.letsEncrypt.acme.email=${self.config.git.email}"
+          "--certificatesresolvers.letsEncrypt.acme.email=satoqz@pm.me"
           "--certificatesresolvers.letsEncrypt.acme.storage=/srv/acme/acme.json"
           "--certificatesresolvers.letsEncrypt.acme.httpchallenge=true"
           "--certificatesresolvers.letsEncrypt.acme.httpchallenge.entrypoint=web"

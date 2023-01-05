@@ -35,8 +35,8 @@
 
   programs.git = {
     enable = true;
-    userEmail = self.config.git.email;
-    userName = self.config.git.user;
+    userEmail = "satoqz@pm.me";
+    userName = "satoqz";
     extraConfig.init.defaultBranch = "main";
     extraConfig.core.excludesfile = "${config.home.homeDirectory}/.config/git/ignore";
   };

@@ -22,7 +22,6 @@
   };
 
   outputs = {self, ...} @ inputs: {
-    config = import ./config.nix;
     lib = import ./lib.nix inputs;
 
     nixosModules.default.imports = [

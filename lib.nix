@@ -76,7 +76,10 @@
   mkNixConfig = pkgs: {
     package = pkgs.nix;
     registry.nixpkgs.flake = inputs.nixpkgs;
-    settings.experimental-features = "nix-command flakes";
+    settings = {
+      experimental-features = "nix-command flakes";
+      trusted-substituters = ["https://systems.cachix.org"];
+    };
   };
 
   # generate `config.home-manager`
@@ -116,7 +119,7 @@
           nix = mkNixConfig pkgs;
           home-manager = mkHomeManagerConfig user;
 
-          time.timeZone = nixpkgs.lib.mkDefault self.config.timeZone;
+          time.timeZone = nixpkgs.lib.mkDefault "Europe/Berlin";
 
           users.users.${user} = {
             isNormalUser = true;

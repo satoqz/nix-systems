@@ -11,7 +11,7 @@
   config = {
     system.autoUpgrade = {
       enable = config.services.caretaker.enable;
-      flake = self.config.flakeUrl;
+      flake = "github:satoqz/nix-systems";
       dates = "daily";
       flags = ["-L"];
     };
