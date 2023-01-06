@@ -7,7 +7,9 @@
 
   virtualisation.oci-containers.backend = "docker";
 
-  virtualisation.oci-containers.containers = {
+  virtualisation.oci-containers.containers = let
+    domain = "trench.world";
+  in {
     watchtower = {
       image = "docker.io/containrrr/watchtower:latest";
       volumes = ["/var/run/docker.sock:/var/run/docker.sock"];
@@ -61,8 +63,8 @@
         use_default_settings = true;
         redis.url = "redis://redis:6379/0";
         server = {
-          instance_name = "${config.networking.domain}";
-          base_url = "https://${config.networking.domain}";
+          instance_name = "${domain}";
+          base_url = "https://${domain}";
           limiter = true;
           image_proxy = true;
           method = "POST";
@@ -101,7 +103,7 @@
         "--entrypoint=/bin/sh"
         "--rm" # because searxng is weird
         "-l=traefik.enable=true"
-        "-l=traefik.http.routers.searx.rule=Host(`${config.networking.domain}`) || Host(`searx.coffeeco.dev`)"
+        "-l=traefik.http.routers.searx.rule=Host(`${domain}`) || Host(`searx.coffeeco.dev`)"
         "-l=traefik.http.routers.searx.tls=true"
         "-l=traefik.http.routers.searx.tls.certresolver=letsEncrypt"
       ];
@@ -118,7 +120,7 @@
       extraOptions = [
         "--network=internal"
         "-l=traefik.enable=true"
-        "-l=traefik.http.routers.rapla.rule=Host(`blade.${config.networking.domain}`)"
+        "-l=traefik.http.routers.rapla.rule=Host(`blade.${domain}`)"
         "-l=traefik.http.routers.rapla.tls=true"
         "-l=traefik.http.routers.rapla.tls.certresolver=letsEncrypt"
       ];

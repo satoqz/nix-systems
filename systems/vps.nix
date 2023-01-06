@@ -5,8 +5,6 @@
 
   time.timeZone = "Europe/Berlin";
 
-  networking.domain = "trench.world";
-
   services.openssh = {
     enable = true;
     passwordAuthentication = false;
