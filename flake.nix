@@ -75,14 +75,16 @@
         ci = let
           inherit (nixpkgs.lib) optional singleton;
           module = builtins.getEnv "CI_MODULE";
+          fakeDevice = "/ruby"; # does not exist
         in
           nixosSystem {
             hostName = "ci";
             modules =
               optional (module != "") self.nixosModules.${module}
               ++ singleton {
+                boot.loader.grub.device = fakeDevice;
                 fileSystems."/" = {
-                  device = "ruby"; # does not exist
+                  device = fakeDevice;
                   fsType = "ext4";
                 };
               };
