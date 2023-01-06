@@ -4,16 +4,6 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
 
-    darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     vscode-server.url = "github:msteen/nixos-vscode-server";
 
     niks.url = "github:satoqz/niks";
@@ -29,17 +19,6 @@
       ./nixos/selfhosted.nix
     ];
 
-    darwinModules.default.imports = [
-      ./darwin/homebrew.nix
-    ];
-
-    homeModules.default.imports = [
-      ./home/helix.nix
-      ./home/tmux.nix
-      ./home/tools.nix
-      ./home/zsh.nix
-    ];
-
     nixosConfigurations = {
       moghlai = self.lib.nixosSystem {
         arch = "x86_64";
@@ -53,15 +32,6 @@
         hostname = "pakora";
         user = "satoqz";
         config = import ./systems/pakora.nix;
-      };
-    };
-
-    darwinConfigurations = {
-      korai = self.lib.darwinSystem {
-        arch = "aarch64";
-        hostname = "korai";
-        user = "satoqz";
-        config = import ./systems/korai.nix;
       };
     };
 

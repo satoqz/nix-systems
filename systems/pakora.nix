@@ -1,27 +1,9 @@
 {
   inputs,
-  user,
   pkgs,
   ...
 }: {
   imports = [inputs.vscode-server.nixosModules.default];
-
-  home-manager.users.${user} = {
-    programs.go.enable = true;
-
-    programs.zsh.initExtra = ''
-      export PATH=$HOME/go/bin:$PATH
-    '';
-
-    home.packages = with pkgs; [
-      gopls
-      delve
-      go-tools
-      gnumake
-      gcc
-      nmap
-    ];
-  };
 
   services.openssh.enable = true;
   services.vscode-server.enable = true;
