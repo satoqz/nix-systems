@@ -65,6 +65,7 @@
 
         utm-vm = nixosSystem {
           hostName = "utm-vm";
+          arch = "aarch64";
           modules = with self.nixosModules; [
             satoqz
             inputs.vscode-server.nixosModules.default
