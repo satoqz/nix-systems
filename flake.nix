@@ -1,51 +1,106 @@
 {
-  description = "satoqz's nix environment";
+  description = "satoqz's nixos configurations";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixpkgs-unstable";
-
+    nixpkgs.url = "nixpkgs/nixos-22.11";
     vscode-server.url = "github:msteen/nixos-vscode-server";
-
-    niks.url = "github:satoqz/niks";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = {self, ...} @ inputs: {
-    lib = import ./lib.nix inputs;
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    ...
+  } @ inputs:
+    {
+      nixosModules = let
+        inherit (nixpkgs.lib) mapAttrs' removeSuffix;
+      in
+        mapAttrs' (name: _: {
+          name = removeSuffix ".nix" name;
+          value = import ./modules/${name};
+        }) (builtins.readDir ./modules);
 
-    nixosModules.default.imports = [
-      ./nixos/caretaker.nix
-      ./nixos/docker.nix
-      ./nixos/openssh.nix
-      ./nixos/selfhosted.nix
-    ];
+      lib.nixosSystem = {
+        arch ? "x86_64",
+        stateVersion ? "22.11",
+        modules ? [],
+        hostName,
+      }: let
+        inherit (nixpkgs.lib) singleton optional;
+        optionalPath = path: optional (builtins.pathExists path) path;
+      in
+        nixpkgs.lib.nixosSystem {
+          system = "${arch}-linux";
+          specialArgs = {
+            inherit self inputs;
+          };
+          modules =
+            modules
+            ++ optionalPath ./systems/${hostName}.nix
+            ++ singleton ({pkgs, ...}: {
+              nix.settings.experimental-features = "nix-command flakes";
+              networking.hostName = hostName;
+              system.stateVersion = stateVersion;
+            });
+        };
 
-    nixosConfigurations = {
-      moghlai = self.lib.nixosSystem {
-        arch = "x86_64";
-        hostname = "moghlai";
-        user = "satoqz";
-        config = import ./systems/moghlai.nix;
+      lib.nixosFlake = {hostname, ...} @ args: {
+        inherit (self) devShells;
+        nixosConfigurations.${hostname} = self.lib.nixosSystem args;
       };
 
-      pakora = self.lib.nixosSystem {
-        arch = "aarch64";
-        hostname = "pakora";
-        user = "satoqz";
-        config = import ./systems/pakora.nix;
-      };
-    };
+      nixosConfigurations = let
+        inherit (self.lib) nixosSystem;
+      in {
+        vps = nixosSystem {
+          hostName = "vps";
+          modules = with self.nixosModules; [
+            satoqz
+            caretaker
+            selfhosted
+          ];
+        };
 
-    devShells = self.lib.forAllPkgs (pkgs: {
-      default = pkgs.mkShell {
-        packages = with pkgs; [nil alejandra gnumake];
+        utm-vm = nixosSystem {
+          hostName = "utm-vm";
+          modules = with self.nixosModules; [
+            satoqz
+            inputs.vscode-server.nixosModules.default
+          ];
+        };
+
+        # requires impure build
+        ci = let
+          inherit (nixpkgs.lib) optional singleton;
+          module = builtins.getEnv "CI_MODULE";
+        in
+          nixosSystem {
+            hostName = "ci";
+            modules =
+              optional (module != "") self.nixosModules.${module}
+              ++ singleton {
+                fileSystems."/" = {
+                  device = "ruby"; # does not exist
+                  fsType = "ext4";
+                };
+              };
+          };
+      };
+    }
+    // flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = import nixpkgs {
+        inherit system;
+      };
+    in rec {
+      formatter = pkgs.alejandra;
+
+      devShells.default = pkgs.mkShell {
+        packages = [
+          formatter
+          pkgs.nil
+        ];
       };
     });
-
-    formatter = self.lib.forAllPkgs (pkgs: pkgs.alejandra);
-  };
-
-  nixConfig = {
-    extra-substituters = ["https://systems.cachix.org"];
-    extra-trusted-public-keys = ["systems.cachix.org-1:w+BPDlm25/PkSE0uN9uV6u12PNmSsBuR/HW6R/djZIc="];
-  };
 }

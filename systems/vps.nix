@@ -1,13 +1,17 @@
 {modulesPath, ...}: {
   imports = [(modulesPath + "/profiles/qemu-guest.nix")];
 
-  services = {
-    openssh.enable = true;
-    caretaker.enable = true;
-    selfhosted.enable = true;
-  };
+  security.sudo.wheelNeedsPassword = false;
+
+  time.timeZone = "Europe/Berlin";
 
   networking.domain = "trench.world";
+
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    permitRootLogin = "no";
+  };
 
   zramSwap.enable = true;
 

@@ -1,0 +1,29 @@
+name: Build nixos modules
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v18
+
+    - name: Check flake
+      run: nix flake check
+
+    - name: Build modules
+      shell: bash
+      run: |
+        modules=($(nix eval .#nixosModules --apply 'x: builtins.toString (builtins.attrNames x)' | tr -d \"))
+        for module in "${modules[@]}"; do
+          CI_MODULE="$module" nix build --impure .#nixosConfigurations.ci.config.system.build.toplevel
+        done

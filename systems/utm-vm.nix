@@ -1,10 +1,4 @@
 {
-  inputs,
-  pkgs,
-  ...
-}: {
-  imports = [inputs.vscode-server.nixosModules.default];
-
   services.openssh.enable = true;
   services.vscode-server.enable = true;
 

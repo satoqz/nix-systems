@@ -1,4 +1,4 @@
-name: flake.lock
+name: Update flake.lock
 
 on:
   workflow_dispatch:
@@ -14,9 +14,6 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@v18
-        with:
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v15
