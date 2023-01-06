@@ -40,9 +40,12 @@
             modules
             ++ optionalPath ./systems/${hostName}.nix
             ++ singleton ({pkgs, ...}: {
-              nix.settings.experimental-features = "nix-command flakes";
               networking.hostName = hostName;
               system.stateVersion = stateVersion;
+              nix.settings = {
+                experimental-features = "nix-command flakes";
+                trusted-users = ["root" "@wheel"];
+              };
             });
         };
 
