@@ -120,11 +120,12 @@
       formatter = pkgs.alejandra;
 
       devShells.default = pkgs.mkShell {
-        packages = [
-          packages.deploy
-          formatter
-          pkgs.nil
-        ];
+        packages =
+          (map (x: pkgs.writeShellScriptBin x.name "nix run .#${x.name} -- $@") (builtins.attrValues packages))
+          ++ [
+            formatter
+            pkgs.nil
+          ];
       };
     });
 }
