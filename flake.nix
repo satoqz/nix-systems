@@ -100,10 +100,28 @@
         inherit system;
       };
     in rec {
+      packages.deploy = pkgs.writeShellScriptBin "deploy" ''
+        set -e
+
+        usage() {
+          echo "Usage: deploy <ssh host> [configuration name]"
+          exit 1
+        }
+
+        [ -z "$1" ] && usage
+
+        config_name=""
+        [ -z "$2" ] || config_name="#$2"
+
+        nix copy --to "ssh://$1" ${self.outPath}
+        ssh -t "$1" sudo nixos-rebuild switch --flake "path:${self.outPath}$config_name"
+      '';
+
       formatter = pkgs.alejandra;
 
       devShells.default = pkgs.mkShell {
         packages = [
+          packages.deploy
           formatter
           pkgs.nil
         ];
