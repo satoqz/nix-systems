@@ -1,131 +1,59 @@
 {
-  description = "satoqz's nixos configurations";
+  description = "satoqz's nix configurations";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.11";
+    nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+    nixos.url = "nixpkgs/nixos-22.11";
+    home-manager.url = "github:nix-community/home-manager";
     vscode-server.url = "github:msteen/nixos-vscode-server";
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    ...
-  } @ inputs:
-    {
-      nixosModules = let
-        inherit (nixpkgs.lib) mapAttrs' removeSuffix;
-      in
-        mapAttrs' (name: _: {
-          name = removeSuffix ".nix" name;
-          value = import ./modules/${name};
-        }) (builtins.readDir ./modules);
+  outputs = {nixpkgs, ...} @ inputs: let
+    systems = ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
 
-      lib.nixosSystem = {
-        arch ? "x86_64",
-        stateVersion ? "22.11",
-        modules ? [],
-        hostName,
-      }: let
-        inherit (nixpkgs.lib) singleton optional;
-        optionalPath = path: optional (builtins.pathExists path) path;
-      in
-        nixpkgs.lib.nixosSystem {
-          system = "${arch}-linux";
-          specialArgs = {
-            inherit self inputs;
+    eachSystem = f:
+      builtins.listToAttrs (map (system: let
+          pkgs = import nixpkgs {
+            inherit system;
           };
-          modules =
-            modules
-            ++ optionalPath ./systems/${hostName}.nix
-            ++ singleton ({pkgs, ...}: {
-              networking.hostName = hostName;
-              system.stateVersion = stateVersion;
-              nix.settings = {
-                experimental-features = "nix-command flakes";
-                trusted-users = ["root" "@wheel"];
-              };
-            });
-        };
+        in {
+          name = system;
+          value = f system pkgs;
+        })
+        systems);
 
-      lib.nixosFlake = {hostname, ...} @ args: {
-        inherit (self) devShells;
-        nixosConfigurations.${hostname} = self.lib.nixosSystem args;
-      };
+    mapValues = f: builtins.mapAttrs (_: value: f value);
 
-      nixosConfigurations = let
-        inherit (self.lib) nixosSystem;
-      in {
-        vps = nixosSystem {
-          hostName = "vps";
-          modules = with self.nixosModules; [
-            satoqz
-            caretaker
-            selfhosted
-          ];
-        };
+    importTopLevel = mapValues (path: import path inputs);
 
-        utm-vm = nixosSystem {
-          hostName = "utm-vm";
-          arch = "aarch64";
-          modules = with self.nixosModules; [
-            satoqz
-            inputs.vscode-server.nixosModules.default
-          ];
-        };
+    importPerSystem = mapValues (path:
+      eachSystem (system: pkgs:
+        import path (inputs
+          // {
+            inherit pkgs system;
+          })));
 
-        # requires impure build
-        ci = let
-          inherit (nixpkgs.lib) optional singleton;
-          module = builtins.getEnv "CI_MODULE";
-          fakeDevice = "/ruby"; # does not exist
-        in
-          nixosSystem {
-            hostName = "ci";
-            modules =
-              optional (module != "") self.nixosModules.${module}
-              ++ singleton {
-                boot.loader.grub.device = fakeDevice;
-                fileSystems."/" = {
-                  device = fakeDevice;
-                  fsType = "ext4";
-                };
-              };
-          };
-      };
-    }
-    // flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-      };
-    in rec {
-      packages.deploy = pkgs.writeShellScriptBin "deploy" ''
-        set -e
+    topLevel = importTopLevel {
+      lib = ./lib.nix;
 
-        usage() {
-          echo "Usage: deploy <ssh host> [configuration name]"
-          exit 1
-        }
+      nixosModules = ./nixos/modules;
+      nixosConfigurations = ./nixos/configurations.nix;
 
-        [ -z "$1" ] && usage
+      homeModules = ./home/modules;
 
-        config_name=""
-        [ -z "$2" ] || config_name="#$2"
+      templates = ./templates;
+    };
 
-        nix copy --to "ssh://$1" ${self.outPath}
-        ssh -t "$1" sudo nixos-rebuild switch --flake "path:${self.outPath}$config_name"
-      '';
+    perSystem = importPerSystem {
+      packages = ./packages.nix;
+      devShells = ./dev-shells.nix;
 
-      formatter = pkgs.alejandra;
+      homeConfigurations = ./home/configurations.nix;
+    };
 
-      devShells.default = pkgs.mkShell {
-        packages =
-          (map (x: pkgs.writeShellScriptBin x.name "nix run .#${x.name} -- $@") (builtins.attrValues packages))
-          ++ [
-            formatter
-            pkgs.nil
-          ];
-      };
-    });
+    extras = {
+      formatter = eachSystem (_: pkgs: pkgs.alejandra);
+    };
+  in
+    topLevel // perSystem // extras;
 }

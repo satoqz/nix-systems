@@ -1,7 +1,7 @@
 {config, ...}: {
   system.autoUpgrade = {
     enable = true;
-    flake = "github:satoqz/nixos-configs";
+    flake = "github:satoqz/configs";
     dates = "daily";
     flags = ["-L"];
   };
