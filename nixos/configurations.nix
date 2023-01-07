@@ -1,6 +1,7 @@
 {
   self,
   nixpkgs,
+  vscode-server,
   ...
 }: let
   modules = self.nixosModules;
@@ -26,6 +27,7 @@ in
     utm-vm.modules = [
       hosts.utm-vm
       modules.satoqz
+      vscode-server.nixosModules.default
     ];
 
     ci.modules = [
