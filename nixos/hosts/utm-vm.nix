@@ -23,4 +23,9 @@
     device = "/dev/disk/by-uuid/2966-05F4";
     fsType = "vfat";
   };
+
+  fileSystems."/home/satoqz/share" = {
+    device = "share";
+    fsType = "virtiofs";
+  };
 }
