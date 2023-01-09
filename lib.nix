@@ -50,7 +50,7 @@
     stateVersion ? "22.11",
   }: let
     home = {
-      stateVersion = stateVersion;
+      inherit stateVersion;
       username = builtins.getEnv "USER";
       homeDirectory = builtins.getEnv "HOME";
     };
